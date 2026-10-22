@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "tfs" ADD COLUMN IF NOT EXISTS "reminder_count" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN IF NOT EXISTS "last_reminder_sent_at" TIMESTAMPTZ(6);

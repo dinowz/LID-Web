@@ -1,0 +1,1000 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                               Int                          @id @default(autoincrement())
+  email                            String                       @unique
+  password                         String
+  name                             String
+  createdAt                        DateTime                     @default(now())
+  updatedAt                        DateTime                     @updatedAt
+  deletedAt                        DateTime?
+  status                           UserStatus                   @default(PENDING)
+  roles                            Role[]                       @default([SPARE_PART])
+  createdDeliveries                Delivery[]                   @relation("DeliveryCreatedBy")
+  updatedDeliveries                Delivery[]                   @relation("DeliveryUpdatedBy")
+  changedDeliveryHistories         DeliveryStatusHistory[]      @relation("DeliveryStatusHistoriesChanged")
+  createdForwarders                Forwarder[]                  @relation("ForwarderCreatedBy")
+  updatedForwarders                Forwarder[]                  @relation("ForwarderUpdatedBy")
+  createdInquiries                 Inquiry[]                    @relation("InquiryCreatedBy")
+  updatedInquiries                 Inquiry[]                    @relation("InquiryUpdatedBy")
+  changedStatusHistories           InquiryStatusHistory[]       @relation("StatusHistoriesChanged")
+  createdInvoices                  Invoice[]                    @relation("InvoiceCreatedBy")
+  updatedInvoices                  Invoice[]                    @relation("InvoiceUpdatedBy")
+  changedInvoiceHistories          InvoiceStatusHistory[]       @relation("InvoiceStatusHistoriesChanged")
+  changedPOHistories               PurchaseOrderStatusHistory[] @relation("POStatusHistoriesChanged")
+  createdProjectExecutions         ProjectExecution[]           @relation("ProjectExecutionCreatedBy")
+  updatedProjectExecutions         ProjectExecution[]           @relation("ProjectExecutionUpdatedBy")
+  changedProjectExecutionHistories ProjectExecutionHistory[]    @relation("ProjectExecutionHistoryUser")
+  createdPOs                       PurchaseOrder[]              @relation("POCreatedBy")
+  updatedPOs                       PurchaseOrder[]              @relation("POUpdatedBy")
+  createdQuotations                Quotation[]                  @relation("QuotationCreatedBy")
+  updatedQuotations                Quotation[]                  @relation("QuotationUpdatedBy")
+  changedQuotationHistories        QuotationStatusHistory[]     @relation("QuotationStatusHistoriesChanged")
+  createdServiceExecutions         ServiceExecution[]           @relation("ServiceExecutionCreatedBy")
+  updatedServiceExecutions         ServiceExecution[]           @relation("ServiceExecutionUpdatedBy")
+  changedServiceExecutionHistories ServiceExecutionHistory[]    @relation("ServiceExecutionHistoryUser")
+}
+
+model CodeWord {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  description String?   @map("description") @db.VarChar(200)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  millType    String?   @map("mill_type") @db.VarChar(50)
+  projectNo   String?   @map("project_no") @db.VarChar(50)
+  inquiries   Inquiry[]
+}
+
+model Customer {
+  id                              Int                  @id @default(autoincrement())
+  name                            String
+  email                           String?
+  phone                           String?
+  address                         String?
+  createdAt                       DateTime             @default(now())
+  updatedAt                       DateTime             @updatedAt
+  customerType                    String               @default("LOCAL") @map("customer_type") @db.VarChar(20)
+  active                          Boolean              @default(true)
+  inquiries                       Inquiry[]
+  invoices                        Invoice[]
+  quotationSparePartAsEndCustomer QuotationSparePart[] @relation("QuotationSparePartEndCustomer")
+}
+
+model Inquiry {
+  id                BigInt                 @id @default(autoincrement())
+  inquiryNumber     String                 @unique @map("inquiry_number") @db.VarChar(50)
+  inquiryDate       DateTime               @map("inquiry_date") @db.Date
+  requestType       String                 @map("request_type") @db.VarChar(40)
+  subject           String                 @db.VarChar(200)
+  description       String?
+  dueDate           DateTime?              @map("due_date") @db.Date
+  createdById       Int?                   @map("created_by")
+  updatedById       Int?                   @map("updated_by")
+  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  codeWordId        Int?                   @map("code_word_id")
+  customerId        Int?                   @map("customer_id")
+  statusCode        String                 @default("OPEN") @map("status_code") @db.VarChar(30)
+  sourceCode        String?                @map("source_code") @db.VarChar(30)
+  lastActivityAt    DateTime?              @map("last_activity_at") @db.Timestamptz(6)
+  lastReminderAt    DateTime?              @map("last_reminder_at") @db.Timestamptz(6)
+  reminderCount     Int                    @default(0) @map("reminder_count")
+  statusChangedAt   DateTime?              @map("status_changed_at") @db.Timestamptz(6)
+  codeWord          CodeWord?              @relation(fields: [codeWordId], references: [id])
+  creator           User?                  @relation("InquiryCreatedBy", fields: [createdById], references: [id])
+  customer          Customer?              @relation(fields: [customerId], references: [id])
+  updater           User?                  @relation("InquiryUpdatedBy", fields: [updatedById], references: [id])
+  details           InquiryDetail[]
+  histories         InquiryStatusHistory[]
+  quotations        Quotation[]
+  serviceExecutions ServiceExecution[]
+
+  @@map("inquiry")
+}
+
+model InquiryDetail {
+  id                  BigInt   @id @default(autoincrement())
+  inquiryId           BigInt   @map("inquiry_id")
+  lineNo              Int      @map("line_no")
+  itemType            String   @map("item_type") @db.VarChar(20)
+  requestDescription  String   @map("request_description")
+  requestedItemName   String?  @map("requested_item_name") @db.VarChar(200)
+  requestedPartNumber String?  @map("requested_part_number") @db.VarChar(100)
+  qty                 Decimal  @default(1) @db.Decimal(18, 2)
+  uom                 String?  @db.VarChar(30)
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  serviceSubType      String?  @map("service_sub_type") @db.VarChar(30)
+  inquiry             Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+
+  @@map("inquiry_detail")
+}
+
+model InquiryStatusHistory {
+  id            BigInt   @id @default(autoincrement())
+  inquiryId     BigInt   @map("inquiry_id")
+  changedBy     Int?     @map("changed_by")
+  changeNote    String?  @map("change_note")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  newStatusCode String   @map("new_status_code") @db.VarChar(30)
+  oldStatusCode String?  @map("old_status_code") @db.VarChar(30)
+  changer       User?    @relation("StatusHistoriesChanged", fields: [changedBy], references: [id])
+  inquiry       Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+
+  @@map("inquiry_status_history")
+}
+
+model Quotation {
+  id                    BigInt                   @id @default(autoincrement())
+  quotationNumber       String                   @unique @map("quotation_number") @db.VarChar(50)
+  customerInquiryNumber String?                  @map("customer_inquiry_number") @db.VarChar(100)
+  inquiryId             BigInt                   @map("inquiry_id")
+  status            EntityStatus             @default(DRAFT)
+  basePrice         Decimal                  @default(0) @db.Decimal(18, 2)
+  margin            Decimal                  @default(0) @db.Decimal(18, 2)
+  totalPrice        Decimal                  @default(0) @db.Decimal(18, 2)
+  remarks           String?
+  createdBy         Int?                     @map("created_by")
+  createdAt         DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  currency          String                   @default("IDR") @db.VarChar(10)
+  exchangeRate      Decimal                  @default(1) @map("exchange_rate") @db.Decimal(18, 2)
+  quotationType     WorkflowType?            @map("quotation_type")
+  lastActivityAt    DateTime?                @map("last_activity_at") @db.Timestamptz(6)
+  lastReminderAt    DateTime?                @map("last_reminder_at") @db.Timestamptz(6)
+  reminderCount     Int                      @default(0) @map("reminder_count")
+  statusChangedAt   DateTime?                @map("status_changed_at") @db.Timestamptz(6)
+  updatedBy         Int?                     @map("updated_by")
+  clientInquiryDate DateTime?                @map("client_inquiry_date") @db.Date
+  customerPoFile    String?                  @map("customer_po_file")
+  globalDiscount    Decimal                  @default(0) @map("global_discount") @db.Decimal(18, 2)
+  forecast          ForecastType             @default(NORMAL)
+  lossDetail        String?                  @map("loss_detail")
+  lossReason        String?                  @map("loss_reason") @db.VarChar(100)
+  invoices          Invoice[]
+  purchaseOrders    PurchaseOrder[]
+  creator           User?                    @relation("QuotationCreatedBy", fields: [createdBy], references: [id])
+  inquiry           Inquiry                  @relation(fields: [inquiryId], references: [id])
+  updater           User?                    @relation("QuotationUpdatedBy", fields: [updatedBy], references: [id])
+  details           QuotationDetail[]
+  projectDetail     QuotationProject?
+  serviceDetail     QuotationService?
+  sparePartDetail   QuotationSparePart?
+  histories         QuotationStatusHistory[]
+  serviceExecutions ServiceExecution[]
+
+  @@map("quotation")
+}
+
+model QuotationStatusHistory {
+  id          BigInt        @id @default(autoincrement())
+  quotationId BigInt        @map("quotation_id")
+  oldStatus   EntityStatus? @map("old_status")
+  newStatus   EntityStatus  @map("new_status")
+  changeNote  String?       @map("change_note")
+  changedBy   Int?          @map("changed_by")
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  changer     User?         @relation("QuotationStatusHistoriesChanged", fields: [changedBy], references: [id])
+  quotation   Quotation     @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@map("quotation_status_history")
+}
+
+model QuotationDetail {
+  id                BigInt             @id @default(autoincrement())
+  quotationId       BigInt             @map("quotation_id")
+  inquiryDetailId   BigInt?            @map("inquiry_detail_id")
+  lineNo            Int                @map("line_no")
+  itemType          String             @map("item_type") @db.VarChar(20)
+  mappedServiceId   BigInt?            @map("mapped_service_id")
+  mappedSparePartId BigInt?            @map("mapped_spare_part_id")
+  qty               Decimal            @default(1) @db.Decimal(18, 2)
+  unitPrice         Decimal            @default(0) @map("unit_price") @db.Decimal(18, 2)
+  discount          Decimal            @default(0) @db.Decimal(18, 2)
+  totalPrice        Decimal            @default(0) @map("total_price") @db.Decimal(18, 2)
+  note              String?
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  isAlternative     Boolean            @default(false) @map("is_alternative")
+  canonPct          Decimal            @default(0) @map("canon_pct") @db.Decimal(8, 4)
+  commissionPct     Decimal            @default(0) @map("commission_pct") @db.Decimal(8, 4)
+  customPct         Decimal            @default(0) @map("custom_pct") @db.Decimal(8, 4)
+  freightPct        Decimal            @default(0) @map("freight_pct") @db.Decimal(8, 4)
+  handlingPct       Decimal            @default(10) @map("handling_pct") @db.Decimal(8, 4)
+  margin            Decimal            @default(0) @db.Decimal(18, 2)
+  overheadPct       Decimal            @default(0) @map("overhead_pct") @db.Decimal(8, 4)
+  sellPriceCalc     Decimal            @default(0) @map("sell_price_calc") @db.Decimal(18, 2)
+  vendorSource      String?            @default("LOG") @map("vendor_source") @db.VarChar(10)
+  service           MasterServiceItem? @relation(fields: [mappedServiceId], references: [id])
+  sparePart         MasterSparePart?   @relation(fields: [mappedSparePartId], references: [id])
+  quotation         Quotation          @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@map("quotation_detail")
+}
+
+model QuotationSparePart {
+  id                    BigInt    @id @default(autoincrement())
+  quotationId           BigInt    @unique @map("quotation_id")
+  endCustomerId         Int?      @map("end_customer_id")
+  location              String?   @db.VarChar(200)
+  projectNo             String?   @map("project_no") @db.VarChar(100)
+  validityDays          Int       @default(30) @map("validity_days")
+  attentionTitle        String?   @map("attention_title") @db.VarChar(10)
+  attention             String?   @db.VarChar(200)
+  deliveryDateDesc      String?   @map("delivery_date_desc")
+  deliveryTerms         String?   @map("delivery_terms") @db.VarChar(300)
+  deliveryTermsShort    String?   @map("delivery_terms_short") @db.VarChar(100)
+  paymentTerms          String?   @map("payment_terms")
+  bankDetails           String?   @map("bank_details")
+  vendorSource          String?   @default("LOG") @map("vendor_source") @db.VarChar(10)
+  handlingPct           Decimal   @default(10) @map("handling_pct") @db.Decimal(8, 4)
+  canonPct              Decimal   @default(0) @map("canon_pct") @db.Decimal(8, 4)
+  commissionPct         Decimal   @default(0) @map("commission_pct") @db.Decimal(8, 4)
+  overheadPct           Decimal   @default(0) @map("overhead_pct") @db.Decimal(8, 4)
+  freightPct            Decimal   @default(0) @map("freight_pct") @db.Decimal(8, 4)
+  customPct             Decimal   @default(0) @map("custom_pct") @db.Decimal(8, 4)
+  sellPriceCalc         Decimal   @default(0) @map("sell_price_calc") @db.Decimal(18, 2)
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  additionalInformation String?   @map("additional_information")
+  paymentConditions     String?   @map("payment_conditions")
+  hasDp                 Boolean   @default(false) @map("has_dp")
+  dpPercent             Decimal?  @default(0) @map("dp_percent") @db.Decimal(5, 2)
+  dpAmount              Decimal?  @default(0) @map("dp_amount") @db.Decimal(18, 2)
+  endCustomer           Customer? @relation("QuotationSparePartEndCustomer", fields: [endCustomerId], references: [id])
+  quotation             Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@map("quotation_spare_part")
+}
+
+model QuotationService {
+  id                   BigInt    @id @default(autoincrement())
+  quotationId          BigInt    @unique @map("quotation_id")
+  location             String?   @db.VarChar(200)
+  projectNo            String?   @map("project_no") @db.VarChar(100)
+  attentionTitle       String?   @map("attention_title") @db.VarChar(10)
+  attention            String?   @db.VarChar(200)
+  validityDays         Int       @default(30) @map("validity_days")
+  scopeOfWork          String?   @map("scope_of_work")
+  paymentTerms         String?   @map("payment_terms")
+  engineerQtyDesc      String?   @map("engineer_qty_desc") @db.VarChar(200)
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  millType             String?   @map("mill_type") @db.VarChar(100)
+  paymentConditions    String?   @map("payment_conditions")
+  paymentMethod        String?   @map("payment_method")
+  pricingConditionText String?   @map("pricing_condition_text")
+  pricingType          String?   @default("standard") @map("pricing_type") @db.VarChar(50)
+  tcItems              Json?     @map("tc_items")
+  tcType               String?   @default("standard") @map("tc_type") @db.VarChar(50)
+  paymentRequirement   String?   @map("payment_requirement")
+  quotation            Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@map("quotation_service")
+}
+
+model QuotationProject {
+  id                 BigInt    @id @default(autoincrement())
+  quotationId        BigInt    @unique @map("quotation_id")
+  location           String?   @db.VarChar(200)
+  projectNo          String?   @map("project_no") @db.VarChar(100)
+  projectTitle       String?   @map("project_title") @db.VarChar(300)
+  projectSiteName    String?   @map("project_site_name") @db.VarChar(200)
+  projectSiteAddress String?   @map("project_site_address")
+  projectDuration    String?   @map("project_duration") @db.VarChar(200)
+  attentionTitle     String?   @map("attention_title") @db.VarChar(10)
+  attention          String?   @db.VarChar(200)
+  validityDays       Int       @default(30) @map("validity_days")
+  paymentTerms       String?   @map("payment_terms")
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  paymentConditions  String?   @map("payment_conditions")
+  quotation          Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@map("quotation_project")
+}
+
+model MasterServiceCategory {
+  id           BigInt              @id @default(autoincrement())
+  categoryCode String              @unique @map("category_code") @db.VarChar(30)
+  categoryName String              @map("category_name") @db.VarChar(100)
+  description  String?
+  active       Boolean             @default(true)
+  createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime            @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  services     MasterServiceItem[]
+
+  @@map("master_service_category")
+}
+
+model MasterServiceItem {
+  id                   BigInt                @id @default(autoincrement())
+  serviceCode          String                @unique @map("service_code") @db.VarChar(50)
+  serviceName          String                @map("service_name") @db.VarChar(200)
+  categoryId           BigInt                @map("category_id")
+  description          String?
+  serviceScope         String?               @map("service_scope")
+  uom                  String                @db.VarChar(30)
+  standardPrice        Decimal               @default(0) @map("standard_price") @db.Decimal(18, 2)
+  currency             String                @default("IDR") @db.VarChar(10)
+  leadTimeDays         Int                   @default(0) @map("lead_time_days")
+  targetCustomerType   String?               @default("external") @map("target_customer_type") @db.VarChar(20)
+  active               Boolean               @default(true)
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  estimatedPrice       Decimal?              @map("estimated_price") @db.Decimal(18, 2)
+  category             MasterServiceCategory @relation(fields: [categoryId], references: [id])
+  purchaseOrderDetails PurchaseOrderDetail[]
+  quotationDetails     QuotationDetail[]
+
+  @@map("master_service_item")
+}
+
+model MasterSparePartCategory {
+  id           BigInt            @id @default(autoincrement())
+  categoryCode String            @unique @map("category_code") @db.VarChar(30)
+  categoryName String            @map("category_name") @db.VarChar(100)
+  description  String?
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  parts        MasterSparePart[]
+
+  @@map("master_spare_part_category")
+}
+
+model MasterSparePart {
+  id                   BigInt                  @id @default(autoincrement())
+  partCode             String                  @unique @map("part_code") @db.VarChar(50)
+  partName             String                  @map("part_name") @db.VarChar(200)
+  categoryId           BigInt                  @map("category_id")
+  drawingNumber        String?                 @map("drawing_number") @db.VarChar(100)
+  brand                String?                 @db.VarChar(100)
+  model                String?                 @db.VarChar(100)
+  specification        String?
+  description          String?
+  uom                  String                  @db.VarChar(30)
+  standardPrice        Decimal                 @default(0) @map("standard_price") @db.Decimal(18, 2)
+  currency             String                  @default("IDR") @db.VarChar(10)
+  leadTimeDays         Int                     @default(0) @map("lead_time_days")
+  stockQty             Decimal                 @default(0) @map("stock_qty") @db.Decimal(18, 2)
+  minStock             Decimal                 @default(0) @map("min_stock") @db.Decimal(18, 2)
+  warehouseLocation    String?                 @map("warehouse_location") @db.VarChar(100)
+  supplierName         String?                 @map("supplier_name") @db.VarChar(150)
+  countryOfOrigin      String?                 @map("country_of_origin") @db.VarChar(100)
+  weightKg             Decimal?                @map("weight_kg") @db.Decimal(12, 2)
+  active               Boolean                 @default(true)
+  createdAt            DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  estimatedPrice       Decimal?                @map("estimated_price") @db.Decimal(18, 2)
+  dimensions           String?                 @db.VarChar(100)
+  category             MasterSparePartCategory @relation(fields: [categoryId], references: [id])
+  purchaseOrderDetails PurchaseOrderDetail[]
+  quotationDetails     QuotationDetail[]
+
+  @@map("master_spare_part")
+}
+
+model MasterDivision {
+  id             BigInt   @id @default(autoincrement())
+  name           String   @db.VarChar(150)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  active         Boolean  @default(true)
+  division       String?  @db.VarChar(100)
+  email          String?  @db.VarChar(100)
+  personnel_code String   @unique @db.VarChar(50)
+  phone          String?  @db.VarChar(50)
+  title          String?  @db.VarChar(100)
+  isIdle         Boolean  @default(true) @map("is_idle")
+  tfsAssignments TFS[]
+
+  @@map("master_division")
+}
+
+model Vendor {
+  id               Int                      @id @default(autoincrement())
+  vendorCode       String                   @unique
+  vendorName       String
+  email            String?
+  phone            String?
+  address          String?
+  contactPerson    String?
+  country          String?
+  active           Boolean                  @default(true)
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  supplyCategory   String?                  @map("supply_category") @db.VarChar(100)
+  productService   String?                  @map("product_service") @db.VarChar(500)
+  projectDetails   PurchaseOrderProject[]
+  serviceDetails   PurchaseOrderService[]
+  sparePartDetails PurchaseOrderSparePart[]
+}
+
+model Forwarder {
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(200)
+  supplierNumber String?  @map("supplier_number") @db.VarChar(100)
+  country        String?  @db.VarChar(100)
+  email          String?  @db.VarChar(150)
+  phone          String?  @db.VarChar(50)
+  active         Boolean  @default(true)
+  createdBy      Int?     @map("created_by")
+  updatedBy      Int?     @map("updated_by")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  creator        User?    @relation("ForwarderCreatedBy", fields: [createdBy], references: [id])
+  updater        User?    @relation("ForwarderUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("forwarder")
+}
+
+model PurchaseOrder {
+  id                BigInt                       @id @default(autoincrement())
+  poNumber          String?                      @unique @map("po_number") @db.VarChar(50)
+  quotationId       BigInt?                      @map("quotation_id")
+  status            EntityStatus                 @default(REVIEW)
+  sdDocument        String?                      @map("sd_document") @db.VarChar(50)
+  netValue          Decimal                      @default(0) @map("net_value") @db.Decimal(18, 2)
+  currency          String                       @default("IDR") @db.VarChar(10)
+  codeWord          String?                      @map("code_word") @db.VarChar(100)
+  salesOrganization String?                      @map("sales_organization") @db.VarChar(100)
+  remarks           String?
+  reminderEmail     String?                      @map("reminder_email") @db.VarChar(150)
+  createdBy         Int?                         @map("created_by")
+  createdAt         DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  exchangeRate      Decimal                      @default(1) @map("exchange_rate") @db.Decimal(18, 2)
+  poType            WorkflowType?                @map("po_type")
+  lastActivityAt    DateTime?                    @map("last_activity_at") @db.Timestamptz(6)
+  lastReminderAt    DateTime?                    @map("last_reminder_at") @db.Timestamptz(6)
+  reminderCount     Int                          @default(0) @map("reminder_count")
+  statusChangedAt   DateTime?                    @map("status_changed_at") @db.Timestamptz(6)
+  customerPoFile    String?                      @map("customer_po_file")
+  updatedBy         Int?                         @map("updated_by")
+  hasDp             Boolean                      @default(false) @map("has_dp")
+  dpPercent         Decimal?                     @default(0) @map("dp_percent") @db.Decimal(5, 2)
+  dpAmount          Decimal?                     @default(0) @map("dp_amount") @db.Decimal(18, 2)
+  dpInvoiced        Boolean                      @default(false) @map("dp_invoiced")
+  dpInvoiceId       BigInt?                      @map("dp_invoice_id")
+  dpInvoice         Invoice?                     @relation("PurchaseOrderDpInvoice", fields: [dpInvoiceId], references: [id])
+  deliveries        Delivery[]
+  invoices          Invoice[]
+  histories         PurchaseOrderStatusHistory[]
+  projectExecutions ProjectExecution[]
+  creator           User?                        @relation("POCreatedBy", fields: [createdBy], references: [id])
+  quotation         Quotation?                   @relation(fields: [quotationId], references: [id])
+  updater           User?                        @relation("POUpdatedBy", fields: [updatedBy], references: [id])
+  details           PurchaseOrderDetail[]
+  projectDetail     PurchaseOrderProject?
+  serviceDetail     PurchaseOrderService?
+  sparePartDetail   PurchaseOrderSparePart?
+  serviceExecutions ServiceExecution[]
+
+  @@map("purchase_order")
+}
+
+model PurchaseOrderSparePart {
+  id                      BigInt        @id @default(autoincrement())
+  poId                    BigInt        @unique @map("po_id")
+  vendorId                Int?          @map("vendor_id")
+  shipToPartyName         String?       @map("ship_to_party_name") @db.VarChar(200)
+  expectedTo              DateTime?     @map("expected_to") @db.Date
+  internalPoUploadedAt    DateTime?     @map("internal_po_uploaded_at") @db.Timestamptz(6)
+  poSentToVendorAt        DateTime?     @map("po_sent_to_vendor_at") @db.Timestamptz(6)
+  ocReceivedAt            DateTime?     @map("oc_received_at") @db.Timestamptz(6)
+  estimatedProductionDone DateTime?     @map("estimated_production_done") @db.Date
+  estimatedReadyToShip    DateTime?     @map("estimated_ready_to_ship") @db.Date
+  internalPoFile          String?       @map("internal_po_file")
+  ocFile                  String?       @map("oc_file")
+  vendorInvoiceFile       String?       @map("vendor_invoice_file")
+  vendorPackingListFile   String?       @map("vendor_packing_list_file")
+  createdAt               DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  vendorType              String        @default("EXTERNAL") @map("vendor_type") @db.VarChar(20)
+  vendorQuotationFile     String?       @map("vendor_quotation_file")
+  otherQuotationFiles     Json?         @map("other_quotation_files")
+  bastFile                String?       @map("bast_file")
+  qcCheckFile             String?       @map("qc_check_file")
+  purchaseOrder           PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  vendor                  Vendor?       @relation(fields: [vendorId], references: [id])
+
+  @@map("purchase_order_spare_part")
+}
+
+model PurchaseOrderService {
+  id                   BigInt        @id @default(autoincrement())
+  poId                 BigInt        @unique @map("po_id")
+  serviceStartDate     DateTime?     @map("service_start_date") @db.Date
+  serviceEndDate       DateTime?     @map("service_end_date") @db.Date
+  picName              String?       @map("pic_name") @db.VarChar(150)
+  engineerName         String?       @map("engineer_name") @db.VarChar(150)
+  serviceReportFile    String?       @map("service_report_file")
+  baFile               String?       @map("ba_file")
+  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  internalPoFile       String?       @map("internal_po_file")
+  internalPoUploadedAt DateTime?     @map("internal_po_uploaded_at") @db.Timestamptz(6)
+  ocFile               String?       @map("oc_file")
+  ocReceivedAt         DateTime?     @map("oc_received_at") @db.Timestamptz(6)
+  poSentToVendorAt     DateTime?     @map("po_sent_to_vendor_at") @db.Timestamptz(6)
+  vendorId             Int?          @map("vendor_id")
+  vendorInvoiceFile    String?       @map("vendor_invoice_file")
+  purchaseOrder        PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  vendor               Vendor?       @relation(fields: [vendorId], references: [id])
+
+  @@map("purchase_order_service")
+}
+
+model PurchaseOrderProject {
+  id                   BigInt        @id @default(autoincrement())
+  poId                 BigInt        @unique @map("po_id")
+  internalPoFile       String?       @map("internal_po_file")
+  vendorInvoiceFile    String?       @map("vendor_invoice_file")
+  baFile               String?       @map("ba_file")
+  projectReportFile    String?       @map("project_report_file")
+  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  engineerName         String?       @map("engineer_name")
+  internalPoUploadedAt DateTime?     @map("internal_po_uploaded_at") @db.Timestamptz(6)
+  ocFile               String?       @map("oc_file")
+  ocReceivedAt         DateTime?     @map("oc_received_at") @db.Timestamptz(6)
+  picName              String?       @map("pic_name")
+  poSentToVendorAt     DateTime?     @map("po_sent_to_vendor_at") @db.Timestamptz(6)
+  serviceEndDate       DateTime?     @map("service_end_date") @db.Date
+  serviceStartDate     DateTime?     @map("service_start_date") @db.Date
+  vendorId             Int?          @map("vendor_id")
+  purchaseOrder        PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  vendor               Vendor?       @relation(fields: [vendorId], references: [id])
+
+  @@map("purchase_order_project")
+}
+
+model PurchaseOrderStatusHistory {
+  id            BigInt        @id @default(autoincrement())
+  poId          BigInt        @map("po_id")
+  oldStatus     String?       @map("old_status")
+  newStatus     String        @map("new_status")
+  changeNote    String?       @map("change_note")
+  changedBy     Int?          @map("changed_by")
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  changer       User?         @relation("POStatusHistoriesChanged", fields: [changedBy], references: [id])
+  purchaseOrder PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+
+  @@map("po_status_history")
+}
+
+model PurchaseOrderDetail {
+  id                BigInt             @id @default(autoincrement())
+  purchaseOrderId   BigInt             @map("purchase_order_id")
+  quotationDetailId BigInt?            @map("quotation_detail_id")
+  itemType          String             @map("item_type") @db.VarChar(20)
+  mappedServiceId   BigInt?            @map("mapped_service_id")
+  mappedSparePartId BigInt?            @map("mapped_spare_part_id")
+  qty               Decimal            @default(1) @db.Decimal(18, 2)
+  unitPrice         Decimal            @default(0) @map("unit_price") @db.Decimal(18, 2)
+  totalPrice        Decimal            @default(0) @map("total_price") @db.Decimal(18, 2)
+  note              String?
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deliveryItems     DeliveryItem[]
+  service           MasterServiceItem? @relation(fields: [mappedServiceId], references: [id])
+  sparePart         MasterSparePart?   @relation(fields: [mappedSparePartId], references: [id])
+  purchaseOrder     PurchaseOrder      @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+
+  @@map("purchase_order_detail")
+}
+
+model ServiceExecution {
+  id                    BigInt                    @id @default(autoincrement())
+  serviceNumber         String                    @unique @map("service_number") @db.VarChar(50)
+  sdNumber              String?                   @map("sd_number") @db.VarChar(100)
+  sourceType            ServiceSourceType         @map("source_type")
+  poId                  BigInt?                   @map("po_id")
+  status                EntityStatus              @default(PENDING)
+  progressNote          String?                   @map("progress_note")
+  startDate             DateTime?                 @map("start_date") @db.Date
+  targetDate            DateTime?                 @map("target_date") @db.Date
+  completedDate         DateTime?                 @map("completed_date") @db.Date
+  remarks               String?
+  createdBy             Int?                      @map("created_by")
+  createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  progressPercentage    Int                       @default(0) @map("progress_percentage")
+  inquiryId             BigInt?                   @map("inquiry_id")
+  issue                 String?
+  nextAction            String?                   @map("next_action")
+  quotationId           BigInt?                   @map("quotation_id")
+  invoiceReminderCount  Int                       @default(0) @map("invoice_reminder_count")
+  lastActivityAt        DateTime?                 @map("last_activity_at") @db.Timestamptz(6)
+  lastInvoiceReminderAt DateTime?                 @map("last_invoice_reminder_at") @db.Timestamptz(6)
+  lastReminderAt        DateTime?                 @map("last_reminder_at") @db.Timestamptz(6)
+  reminderCount         Int                       @default(0) @map("reminder_count")
+  statusChangedAt       DateTime?                 @map("status_changed_at") @db.Timestamptz(6)
+  timesheetFile         String?                   @map("timesheet_file")
+  updatedBy             Int?                      @map("updated_by")
+  invoices              Invoice[]
+  creator               User?                     @relation("ServiceExecutionCreatedBy", fields: [createdBy], references: [id])
+  inquiry               Inquiry?                  @relation(fields: [inquiryId], references: [id])
+  purchaseOrder         PurchaseOrder?            @relation(fields: [poId], references: [id])
+  quotation             Quotation?                @relation(fields: [quotationId], references: [id])
+  updater               User?                     @relation("ServiceExecutionUpdatedBy", fields: [updatedBy], references: [id])
+  histories             ServiceExecutionHistory[]
+  tfsAssignments        TFS[]
+
+  @@map("service_execution")
+}
+
+model ServiceExecutionHistory {
+  id           BigInt           @id @default(autoincrement())
+  serviceId    BigInt           @map("service_id")
+  oldStatus    String?          @map("old_status")
+  newStatus    String           @map("new_status")
+  oldProgress  Int?             @map("old_progress")
+  newProgress  Int              @map("new_progress")
+  progressNote String?          @map("progress_note")
+  changedBy    Int?             @map("changed_by")
+  createdAt    DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  issue        String?
+  nextAction   String?          @map("next_action")
+  changer      User?            @relation("ServiceExecutionHistoryUser", fields: [changedBy], references: [id])
+  service      ServiceExecution @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@map("service_execution_history")
+}
+
+model TFS {
+  id                 BigInt            @id @default(autoincrement())
+  tfsNumber          String            @unique @map("tfs_number") @db.VarChar(50)
+  status             EntityStatus      @default(DRAFT)
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  days               Int?
+  endDate            DateTime?         @map("end_date") @db.Date
+  startDate          DateTime?         @map("start_date") @db.Date
+  title              String?           @db.VarChar(300)
+  jobDescription     String?           @map("job_description")
+  personnelId        BigInt            @map("personnel_id")
+  remarks            String?
+  serviceExecutionId BigInt?           @map("service_execution_id")
+  hoursPerDay        Int?              @map("hours_per_day")
+  assignmentType     TfsAssignmentType @default(PAID_ASSIGNMENT) @map("assignment_type")
+  reminderCount      Int               @default(0) @map("reminder_count")
+  lastReminderSentAt DateTime?         @map("last_reminder_sent_at") @db.Timestamptz(6)
+  personnel          MasterDivision    @relation(fields: [personnelId], references: [id])
+  serviceExecution   ServiceExecution? @relation(fields: [serviceExecutionId], references: [id], onDelete: Cascade)
+
+  @@map("tfs")
+}
+
+model ProjectExecution {
+  id                    BigInt                    @id @default(autoincrement())
+  projectNumber         String                    @unique @map("project_number") @db.VarChar(50)
+  projectType           ProjectType               @map("project_type")
+  poId                  BigInt                    @map("po_id")
+  projectName           String                    @map("project_name") @db.VarChar(200)
+  status                EntityStatus              @default(OPEN)
+  description           String?
+  startDate             DateTime?                 @map("start_date") @db.Date
+  targetDate            DateTime?                 @map("target_date") @db.Date
+  completedDate         DateTime?                 @map("completed_date") @db.Date
+  progressNote          String?                   @map("progress_note")
+  createdBy             Int?                      @map("created_by")
+  createdAt             DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  issue                 String?
+  nextAction            String?                   @map("next_action")
+  picName               String?                   @map("pic_name") @db.VarChar(150)
+  progressPercentage    Int                       @default(0) @map("progress_percentage")
+  invoiceReminderCount  Int                       @default(0) @map("invoice_reminder_count")
+  lastActivityAt        DateTime?                 @map("last_activity_at") @db.Timestamptz(6)
+  lastInvoiceReminderAt DateTime?                 @map("last_invoice_reminder_at") @db.Timestamptz(6)
+  lastReminderAt        DateTime?                 @map("last_reminder_at") @db.Timestamptz(6)
+  reminderCount         Int                       @default(0) @map("reminder_count")
+  statusChangedAt       DateTime?                 @map("status_changed_at") @db.Timestamptz(6)
+  updatedBy             Int?                      @map("updated_by")
+  invoices              Invoice[]
+  creator               User?                     @relation("ProjectExecutionCreatedBy", fields: [createdBy], references: [id])
+  purchaseOrder         PurchaseOrder             @relation(fields: [poId], references: [id])
+  updater               User?                     @relation("ProjectExecutionUpdatedBy", fields: [updatedBy], references: [id])
+  histories             ProjectExecutionHistory[]
+
+  @@map("project_execution")
+}
+
+model ProjectExecutionHistory {
+  id           BigInt           @id @default(autoincrement())
+  projectId    BigInt           @map("project_id")
+  oldStatus    String?          @map("old_status")
+  newStatus    String           @map("new_status")
+  oldProgress  Int?             @map("old_progress")
+  newProgress  Int              @map("new_progress")
+  progressNote String?          @map("progress_note")
+  issue        String?
+  nextAction   String?          @map("next_action")
+  changedBy    Int?             @map("changed_by")
+  createdAt    DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  changer      User?            @relation("ProjectExecutionHistoryUser", fields: [changedBy], references: [id])
+  project      ProjectExecution @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_execution_history")
+}
+
+model Invoice {
+  id              BigInt                 @id @default(autoincrement())
+  invoiceNumber   String?                @unique @map("invoice_number") @db.VarChar(50)
+  sourceType      InvoiceSourceType      @map("source_type")
+  serviceId       BigInt?                @map("service_id")
+  projectId       BigInt?                @map("project_id")
+  totalAmount     Decimal                @default(0) @map("total_amount") @db.Decimal(18, 2)
+  currency        String                 @default("IDR") @db.VarChar(10)
+  dueDate         DateTime?              @map("due_date") @db.Date
+  status          EntityStatus           @default(DRAFT)
+  paymentDate     DateTime?              @map("payment_date") @db.Date
+  paymentNote     String?                @map("payment_note")
+  remarks         String?
+  createdBy       Int?                   @map("created_by")
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  attachmentUrl   String?                @map("attachment_url")
+  customerId      Int?                   @map("customer_id")
+  deliveryId      BigInt?                @map("delivery_id")
+  exchangeRate    Decimal                @default(1) @map("exchange_rate") @db.Decimal(18, 2)
+  invoiceDate     DateTime?              @map("invoice_date") @db.Date
+  paidAmount      Decimal                @default(0) @map("paid_amount") @db.Decimal(18, 2)
+  poId            BigInt?                @map("po_id")
+  quotationId     BigInt?                @map("quotation_id")
+  remainingAmount Decimal                @default(0) @map("remaining_amount") @db.Decimal(18, 2)
+  subtotalAmount  Decimal                @default(0) @map("subtotal_amount") @db.Decimal(18, 2)
+  taxAmount       Decimal                @default(0) @map("tax_amount") @db.Decimal(18, 2)
+  updatedBy       Int?                   @map("updated_by")
+  paymentProofUrl String?                @map("payment_proof_url")
+  soSdSapNumber   String?                @map("so_sd_sap_number") @db.VarChar(100)
+  isDp            Boolean                @default(false) @map("is_dp")
+  dpPercent       Decimal?               @map("dp_percent") @db.Decimal(5, 2)
+  dpDeduction     Decimal?               @default(0) @map("dp_deduction") @db.Decimal(18, 2)
+  creator         User?                  @relation("InvoiceCreatedBy", fields: [createdBy], references: [id])
+  customer        Customer?              @relation(fields: [customerId], references: [id])
+  delivery        Delivery?              @relation(fields: [deliveryId], references: [id])
+  purchaseOrder   PurchaseOrder?         @relation(fields: [poId], references: [id])
+  project         ProjectExecution?      @relation(fields: [projectId], references: [id])
+  quotation       Quotation?             @relation(fields: [quotationId], references: [id])
+  service         ServiceExecution?      @relation(fields: [serviceId], references: [id])
+  dpPurchaseOrders PurchaseOrder[]       @relation("PurchaseOrderDpInvoice")
+  updater         User?                  @relation("InvoiceUpdatedBy", fields: [updatedBy], references: [id])
+  details         InvoiceDetail[]
+  histories       InvoiceStatusHistory[]
+
+  @@map("invoice")
+}
+
+model InvoiceDetail {
+  id               BigInt   @id @default(autoincrement())
+  invoiceId        BigInt   @map("invoice_id")
+  deliveryDetailId BigInt?  @map("delivery_detail_id")
+  description      String   @db.VarChar(300)
+  qty              Decimal  @default(1) @db.Decimal(18, 2)
+  uom              String?  @db.VarChar(20)
+  unitPrice        Decimal  @default(0) @map("unit_price") @db.Decimal(18, 2)
+  discount         Decimal  @default(0) @db.Decimal(18, 2)
+  lineTotal        Decimal  @default(0) @map("line_total") @db.Decimal(18, 2)
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  invoice          Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_detail")
+}
+
+model InvoiceStatusHistory {
+  id         BigInt        @id @default(autoincrement())
+  invoiceId  BigInt        @map("invoice_id")
+  oldStatus  EntityStatus? @map("old_status")
+  newStatus  EntityStatus  @map("new_status")
+  changeNote String?       @map("change_note")
+  changedBy  Int?          @map("changed_by")
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  changer    User?         @relation("InvoiceStatusHistoriesChanged", fields: [changedBy], references: [id])
+  invoice    Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_status_history")
+}
+
+model Delivery {
+  id                           BigInt                  @id @default(autoincrement())
+  deliveryNumber               String                  @unique @map("delivery_number") @db.VarChar(50)
+  poId                         BigInt                  @map("po_id")
+  status                       DeliveryStatus          @default(REVIEW_LOGISTIC)
+  trackingNumber               String?                 @map("tracking_number") @db.VarChar(100)
+  shippingService              String?                 @map("shipping_service") @db.VarChar(100)
+  currentLocation              String?                 @map("current_location") @db.VarChar(200)
+  targetDeliveryDate           DateTime?               @map("target_delivery_date") @db.Date
+  actualDeliveryDate           DateTime?               @map("actual_delivery_date") @db.Date
+  delayReason                  String?                 @map("delay_reason")
+  logisticNote                 String?                 @map("logistic_note")
+  reminderEmail                String?                 @map("reminder_email") @db.VarChar(150)
+  createdBy                    Int?                    @map("created_by")
+  createdAt                    DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                    DateTime                @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  dimensions                   String?                 @map("dimensions") @db.VarChar(100)
+  freightCost                  Decimal?                @map("freight_cost") @db.Decimal(18, 2)
+  weightKg                     Decimal?                @map("weight_kg") @db.Decimal(10, 2)
+  invoiceReminderCount         Int                     @default(0) @map("invoice_reminder_count")
+  lastInvoiceReminderAt        DateTime?               @map("last_invoice_reminder_at") @db.Timestamptz(6)
+  lastLogisticReminderAt       DateTime?               @map("last_logistic_reminder_at") @db.Timestamptz(6)
+  logisticReminderCount        Int                     @default(0) @map("logistic_reminder_count")
+  proofOfDelivery              String?                 @map("proof_of_delivery")
+  updatedBy                    Int?                    @map("updated_by")
+  deliveryMethod               String?                 @map("delivery_method") @db.VarChar(50)
+  giNumber                     String?                 @map("gi_number")
+  shippingAddress              String?                 @map("shipping_address")
+  pic                          String?                 @map("pic") @db.VarChar(200)
+  forwarderPoFile              String?                 @map("forwarder_po_file")
+  forwarderQuotationFile       String?                 @map("forwarder_quotation_file")
+  otherForwarderQuotationFiles Json?                   @map("other_forwarder_quotation_files")
+  forwarderInvoiceFile         String?                 @map("forwarder_invoice_file")
+  clientPoNumber               String?                 @map("client_po_number") @db.VarChar(100)
+  packingList                  String?                 @map("packing_list")
+  creator                      User?                   @relation("DeliveryCreatedBy", fields: [createdBy], references: [id])
+  purchaseOrder                PurchaseOrder           @relation(fields: [poId], references: [id])
+  updater                      User?                   @relation("DeliveryUpdatedBy", fields: [updatedBy], references: [id])
+  items                        DeliveryItem[]
+  histories                    DeliveryStatusHistory[]
+  invoices                     Invoice[]
+
+  @@map("delivery")
+}
+
+model DeliveryItem {
+  id           BigInt              @id @default(autoincrement())
+  deliveryId   BigInt              @map("delivery_id")
+  poDetailId   BigInt              @map("po_detail_id")
+  qtyDelivered Decimal             @default(0) @map("qty_delivered") @db.Decimal(18, 2)
+  note         String?
+  createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime            @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  delivery     Delivery            @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  poDetail     PurchaseOrderDetail @relation(fields: [poDetailId], references: [id])
+
+  @@map("delivery_item")
+}
+
+model DeliveryStatusHistory {
+  id          BigInt          @id @default(autoincrement())
+  deliveryId  BigInt          @map("delivery_id")
+  oldStatus   DeliveryStatus? @map("old_status")
+  newStatus   DeliveryStatus  @map("new_status")
+  location    String?         @db.VarChar(200)
+  note        String?
+  delayReason String?         @map("delay_reason")
+  changedBy   Int?            @map("changed_by")
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  changer     User?           @relation("DeliveryStatusHistoriesChanged", fields: [changedBy], references: [id])
+  delivery    Delivery        @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+
+  @@map("delivery_status_history")
+}
+
+model PipelineTarget {
+  id              Int      @id @default(autoincrement())
+  year            Int      @unique
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  exchangeRateEur Decimal  @default(16500) @map("exchange_rate_eur") @db.Decimal(18, 2)
+  exchangeRateUsd Decimal  @default(15000) @map("exchange_rate_usd") @db.Decimal(18, 2)
+  roleTargets     Json?    @map("role_targets")
+  target          Decimal  @default(0) @db.Decimal(20, 2)
+  targetProject   Decimal  @default(0) @map("target_project") @db.Decimal(20, 2)
+  targetService   Decimal  @default(0) @map("target_service") @db.Decimal(20, 2)
+  targetSparepart Decimal  @default(0) @map("target_sparepart") @db.Decimal(20, 2)
+
+  @@map("pipeline_target")
+}
+
+enum Role {
+  ADMIN
+  PROCUREMENT
+  LOGISTIC
+  FINANCE
+  PROJECT
+  TFS
+  SPARE_PART
+  SERVICE
+  MANAGEMENT
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  BLOCK
+}
+
+enum EntityStatus {
+  OPEN
+  FOLLOW_UP
+  CLOSED
+  DRAFT
+  SENT
+  APPROVED
+  REJECTED
+  WAITING
+  IN_PROGRESS
+  DONE
+  PENDING
+  SHIPPED
+  DELIVERED
+  PAID
+  ACTIVE
+  COMPLETED
+  REVIEW
+  REALIZED
+  CLOSE_LOSS
+  PROCESSING
+  WAITING_OC
+  READY
+  OVERDUE
+  CANCELLED
+  ASSIGNED
+  READY_FOR_EXECUTION
+  MANUFACTURING
+  EXECUTED
+}
+
+enum DeliveryStatus {
+  REVIEW_LOGISTIC
+  PACKED
+  SHIPPED
+  IN_TRANSIT
+  DELIVERED
+  DELAYED
+  COMPLETED
+  CANCELLED
+}
+
+enum WorkflowType {
+  SPARE_PART
+  SERVICE
+  PROJECT
+}
+
+enum ProjectType {
+  NEW_PLANT
+  UPGRADE
+  OM
+}
+
+enum TfsType {
+  EXTERNAL
+  IC
+}
+
+enum InvoiceSourceType {
+  SERVICE
+  PROJECT
+  DELIVERY
+}
+
+enum ServiceSourceType {
+  EXTERNAL_PURCHASE
+  IC_TFS
+  EXTERNAL_TFS
+}
+
+enum TfsAssignmentType {
+  PAID_ASSIGNMENT
+  FREE_ASSIGNMENT
+  DAY_OFF
+}
+
+enum ForecastType {
+  WORST
+  NORMAL
+  BEST
+}

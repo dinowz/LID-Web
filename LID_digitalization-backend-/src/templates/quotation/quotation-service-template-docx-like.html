@@ -1,0 +1,3170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quotation Template</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 15mm 25mm 15mm;
+    }
+
+    @page :first {
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #e9e9e9;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111;
+    }
+
+    .page {
+      position: relative;
+      width: 210mm;
+      min-height: 270mm;
+      margin: 0 auto 12px;
+      background: white;
+      page-break-after: always;
+    }
+
+    .content {
+      position: absolute;
+      left: 19mm;
+      right: 18mm;
+      top: 22mm;
+      bottom: 28mm;
+      font-size: 11.2pt;
+      line-height: 1.18;
+    }
+
+    .cover-content {
+      left: 58mm;
+      right: 35mm;
+      top: 42mm;
+      bottom: 35mm;
+    }
+
+    .doc-header {
+      display: none !important;
+    }
+
+    .page-no-bottom,
+    .copyright-bottom,
+    .hr-bottom {
+      display: none !important;
+    }
+
+    .doc-header {
+      position: absolute;
+      top: 14mm;
+      left: 16mm;
+      right: 18mm;
+      height: 18mm;
+    }
+
+    .doc-header img {
+      width: 56mm;
+      height: auto;
+      display: block;
+    }
+
+    .greenline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 13mm;
+      border-top: 1.6pt solid #4daf38;
+    }
+
+    h1 {
+      font-size: 18pt;
+      margin: 0 0 8mm 0;
+      line-height: 1.05;
+    }
+
+    h2 {
+      font-size: 12pt;
+      margin: 0 0 2mm;
+      text-decoration: underline;
+    }
+
+    p {
+      margin: 0 0 3mm;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .cover-logo {
+      position: absolute;
+      top: 12mm;
+      right: 15mm;
+      width: 50mm;
+    }
+
+    .vertical-title {
+      position: absolute;
+      left: 19mm;
+      top: 42mm;
+      transform-origin: left top;
+      transform: rotate(-90deg) translateX(-100%);
+      color: #00b018;
+      font-size: 30pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .plant {
+      width: 100%;
+      height: auto;
+      max-height: 135mm;
+      object-fit: cover;
+      display: block;
+      margin: 6mm 0 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    /* =========================
+   QUOTATION PAGE / PAGE 1
+   ========================= */
+
+    .quotation-page {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    .quotation-page .doc-header {
+      position: absolute;
+      top: 14mm;
+      left: 22mm;
+      right: 23mm;
+      height: 16mm;
+    }
+
+    .quotation-page .doc-header img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .quotation-page .greenline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 9mm;
+      border-top: 1.5pt solid #58a83d;
+    }
+
+    .company-address-top {
+      font-size: 8.6pt;
+      line-height: 1;
+    }
+
+    .quotation-page {
+      padding-bottom: 32mm;
+      box-sizing: border-box;
+    }
+
+    .top-separator {
+      position: absolute;
+      top: 5mm;
+      width: 128mm;
+      border-top: 1px solid #000;
+    }
+
+    .customer-address {
+      position: absolute;
+      top: 30mm;
+      left: 22mm;
+      width: 78mm;
+      font-size: 11pt;
+      line-height: 1.42;
+    }
+
+    .quotation-box {
+      position: absolute;
+      top: 20mm;
+      right: 20mm;
+      width: 84mm;
+      min-height: 77mm;
+      border: 2px solid #111;
+      padding: 3mm 3mm 3mm 3mm;
+      font-size: 9.7pt;
+      line-height: 1.15;
+    }
+
+    .quotation-box-title {
+      font-size: 21pt;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3mm;
+      letter-spacing: 0.2px;
+    }
+
+    .quotation-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      column-gap: 8mm;
+      row-gap: 1.2mm;
+    }
+
+    .quotation-grid .q-full {
+      grid-column: 1 / span 2;
+    }
+
+    .q-label {
+      font-size: 8.2pt;
+      line-height: 1.05;
+    }
+
+    .q-value {
+      font-size: 8.8pt;
+      line-height: 1.15;
+      margin-top: 0.5mm;
+    }
+
+    .q-value.bold {
+      font-weight: 700;
+    }
+
+    .q-value.mail {
+      color: #1b6d89;
+      text-decoration: underline;
+    }
+
+    .opening-letter {
+      position: absolute;
+      top: 100mm;
+      left: 22mm;
+      right: 18mm;
+      font-size: 10.5pt;
+      line-height: 1.12;
+    }
+
+    .opening-letter p {
+      margin: 0 0 5mm 0;
+    }
+
+    .price-table-wrapper {
+      padding-top: 120mm;
+      padding-left: 24mm;
+      padding-right: 18mm;
+      padding-bottom: 32mm;
+      box-sizing: border-box;
+    }
+
+    .quotation-price-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 10.2pt;
+      line-height: 1.08;
+    }
+
+    .quotation-price-table tr {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .quotation-price-table th {
+      font-weight: 700;
+      text-align: left;
+      padding: 1.3mm 1.8mm;
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+      border-left: 1px dotted #c7c7c7;
+      border-right: 1px dotted #c7c7c7;
+      vertical-align: top;
+    }
+
+    .quotation-price-table th:nth-child(4),
+    .quotation-price-table th:nth-child(5) {
+      text-align: center;
+    }
+
+    .quotation-price-table td {
+      padding: 2.5mm 1.8mm;
+      vertical-align: top;
+    }
+
+    .quotation-price-table .center {
+      text-align: center;
+    }
+
+    .quotation-price-table .group-row td {
+      height: 20mm;
+      padding-top: 6mm;
+    }
+
+    .service-title {
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .service-line {
+      width: 56mm;
+      border-top: 1px solid #000;
+      margin-top: 5mm;
+    }
+
+    .quotation-price-table .exclude-row td {
+      border-left: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      padding-top: 1.5mm;
+      padding-bottom: 1.5mm;
+    }
+
+    .quotation-price-table .total-row td {
+      font-weight: 700;
+      border-left: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      padding-top: 1.3mm;
+      padding-bottom: 1.3mm;
+    }
+
+    .quotation-price-table tr.top-line>td {
+      border-top: 2px solid #000 !important;
+    }
+
+    .quotation-price-table .total-row td:nth-child(3) {
+      text-align: left;
+    }
+
+    .quotation-notes {
+      margin: 5mm 0 5mm 7mm;
+      padding: 0;
+      list-style: none;
+      font-size: 10.2pt;
+      line-height: 1.18;
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+
+    .quotation-notes li {
+      position: relative;
+      padding-left: 7mm;
+      margin-bottom: 1.4mm;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .quotation-notes li::before {
+      content: "-";
+      position: absolute;
+      left: 0;
+    }
+
+    .quotation-page .page-no-bottom {
+      position: absolute;
+      right: 18mm;
+      bottom: 18mm;
+      font-size: 10.5pt;
+      color: #777;
+      letter-spacing: 2px;
+    }
+
+    .quotation-page .hr-bottom {
+      position: absolute;
+      left: 22mm;
+      right: 16mm;
+      bottom: 31mm;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .quotation-page .copyright-bottom {
+      position: absolute;
+      left: 24mm;
+      bottom: 4mm;
+      font-size: 8pt;
+      color: #666;
+    }
+
+    /* =========================
+   SCOPE / PAYMENT PAGE
+   PAGE 3
+   ========================= */
+
+    .scope-page {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    .scope-page .doc-header {
+      position: absolute;
+      top: 14mm;
+      left: 22mm;
+      right: 23mm;
+      height: 16mm;
+    }
+
+    .scope-page .doc-header img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .scope-page .greenline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 9mm;
+      border-top: 1.5pt solid #58a83d;
+    }
+
+    .scope-content {
+      position: relative;
+      margin-top: 8mm;
+      padding-bottom: 38mm;
+      box-sizing: border-box;
+      font-size: 10.7pt;
+      line-height: 1.18;
+    }
+
+    .scope-content h2,
+    .scope-content p,
+    .scope-content ul,
+    .scope-content div,
+    .scope-content .signature-block,
+    .scope-content .closing-text,
+    .scope-content .company-spaced {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .scope-content h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      text-decoration: underline;
+      margin: 4mm 0 2.2mm 0;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    .scope-content p {
+      margin: 0 0 3.2mm 0;
+    }
+
+    .scope-content .bold {
+      font-weight: 700;
+    }
+
+    .scope-content .italic {
+      font-style: italic;
+    }
+
+    .scope-list {
+      list-style: none;
+      margin: 0 0 4.5mm 0;
+      padding: 0;
+    }
+
+    .scope-list li {
+      position: relative;
+      padding-left: 7mm;
+      margin-bottom: 1.5mm;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .scope-list li::before {
+      content: "-";
+      position: absolute;
+      left: 0;
+    }
+
+    .price-note {
+      margin-top: 4mm !important;
+      margin-bottom: 5mm !important;
+    }
+
+    .doc-indent {
+      display: inline-block;
+      margin-left: 8mm;
+      margin-top: 1mm;
+    }
+
+    .closing-text {
+      margin-top: 5mm !important;
+      margin-bottom: 5mm !important;
+    }
+
+    .signature-block {
+      margin-top: 2mm !important;
+      line-height: 1.25;
+    }
+
+    .company-spaced {
+      margin-top: 8mm !important;
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: 2.8px;
+      white-space: nowrap;
+    }
+
+    .scope-footer-address {
+      position: absolute;
+      right: 23mm;
+      bottom: 31mm;
+      width: 66mm;
+      font-size: 8.3pt;
+      line-height: 1.08;
+    }
+
+    .scope-footer-logo {
+      position: absolute;
+      right: 22mm;
+      bottom: 30mm;
+      width: 70mm;
+      height: auto;
+    }
+
+    .scope-page .hr-bottom {
+      position: absolute;
+      left: 22mm;
+      right: 16mm;
+      bottom: 31mm;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .scope-page .copyright-bottom {
+      position: absolute;
+      left: 24mm;
+      bottom: 4mm;
+      font-size: 8pt;
+      color: #666;
+    }
+
+    .scope-page .page-no-bottom {
+      position: absolute;
+      right: 18mm;
+      bottom: 18mm;
+      font-size: 10.5pt;
+      color: #777;
+      letter-spacing: 2px;
+    }
+
+    /* =========================
+   TERMS PAGE BASE
+   PAGE 4+
+   ========================= */
+
+    .terms-page {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    .terms-page .doc-header {
+      position: absolute;
+      top: 14mm;
+      left: 22mm;
+      right: 23mm;
+      height: 16mm;
+    }
+
+    .terms-page .doc-header img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .terms-page .greenline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 9mm;
+      border-top: 1.5pt solid #58a83d;
+    }
+
+    .terms-content {
+      position: absolute;
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 33mm;
+      font-size: 10.2pt;
+      line-height: 1.17;
+    }
+
+    .terms-main-title {
+      text-align: center;
+      font-weight: 700;
+      font-size: 10.8pt;
+      line-height: 1.2;
+      margin-bottom: 11mm;
+    }
+
+    .terms-content h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      margin: 0 0 6mm 0;
+    }
+
+    .term-row {
+      display: grid;
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 4.2mm;
+    }
+
+    .term-no {
+      font-size: 10.2pt;
+      line-height: 1.17;
+    }
+
+    .term-text {
+      font-size: 10.2pt;
+      line-height: 1.17;
+      text-align: left;
+    }
+
+    .term-text p {
+      margin: 3.2mm 0 0 0;
+    }
+
+    /* T&C override system: show N/A or custom text when is-override class is set */
+    .tc-override {
+      display: none;
+    }
+
+    .tc-original {
+      display: block;
+    }
+
+    .term-text.is-override .tc-override {
+      display: block;
+    }
+
+    .term-text.is-override .tc-original {
+      display: none;
+    }
+
+    .terms-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 4mm 0 4mm 0;
+    }
+
+    .terms-bullets li {
+      position: relative;
+      padding-left: 6mm;
+      margin-bottom: 1.4mm;
+    }
+
+    .terms-bullets li::before {
+      content: "·";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+    }
+
+    .terms-page .hr-bottom {
+      position: absolute;
+      left: 22mm;
+      right: 16mm;
+      bottom: 31mm;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .terms-page .copyright-bottom {
+      position: absolute;
+      left: 24mm;
+      bottom: 4mm;
+      font-size: 8pt;
+      color: #666;
+    }
+
+    .terms-page .page-no-bottom {
+      position: absolute;
+      right: 18mm;
+      bottom: 18mm;
+      font-size: 10.5pt;
+      color: #777;
+      letter-spacing: 2px;
+    }
+
+    /* =========================
+   TERMS PAGE 5
+   SECTION 3 - 4.2.4
+   ========================= */
+
+    .terms-page-2-content {
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 33mm;
+      font-size: 9.75pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-2-content h3 {
+      font-size: 10.3pt;
+      font-weight: 700;
+      margin: 0 0 4.5mm 0;
+    }
+
+    .terms-page-2-content .terms-section-title-long {
+      margin-top: 5.5mm;
+      margin-bottom: 4.5mm;
+      line-height: 1.15;
+    }
+
+    .terms-page-2-content .term-row {
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 3.1mm;
+    }
+
+    .terms-page-2-content .term-no {
+      font-size: 9.75pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-2-content .term-text {
+      font-size: 9.75pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-2-content .sub-term {
+      margin-bottom: 2.7mm;
+    }
+
+    .terms-page-2-content .term-text p {
+      margin: 2.5mm 0 0 0;
+    }
+
+    .appropriate-standard-title {
+      margin-top: 3.2mm !important;
+      margin-bottom: 2.2mm !important;
+    }
+
+    /* =========================
+   TERMS PAGE 6
+   SECTION 4.2.4 CONTINUED - 5.3
+   ========================= */
+
+    .terms-page-3-content {
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 33mm;
+      font-size: 9.65pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-3-content h3 {
+      font-size: 10.3pt;
+      font-weight: 700;
+      margin: 0 0 4.5mm 0;
+    }
+
+    .terms-page-3-content .terms-section-title-long {
+      margin-top: 6mm;
+      margin-bottom: 4.5mm;
+      line-height: 1.15;
+    }
+
+    .terms-page-3-content .term-row {
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 3.3mm;
+    }
+
+    .terms-page-3-content .term-no {
+      font-size: 9.65pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-3-content .term-text {
+      font-size: 9.65pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-3-content .sub-term {
+      margin-bottom: 3.2mm;
+    }
+
+    .terms-page-3-content .term-text p {
+      margin: 2.7mm 0 0 0;
+    }
+
+    /* =========================
+   TERMS PAGE 7
+   SECTION 5.4 - 5.8
+   ========================= */
+
+    .terms-page-4-content {
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 33mm;
+      font-size: 9.4pt;
+      line-height: 1.1;
+    }
+
+    .terms-page-4-content .term-row {
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 3mm;
+    }
+
+    .terms-page-4-content .term-no {
+      font-size: 9.4pt;
+      line-height: 1.1;
+    }
+
+    .terms-page-4-content .term-text {
+      font-size: 9.4pt;
+      line-height: 1.1;
+    }
+
+    .terms-page-4-content .term-text p {
+      margin: 2.5mm 0 0 0;
+    }
+
+    .delay-title {
+      margin-top: 3mm !important;
+      margin-bottom: 2mm !important;
+    }
+
+    .delay-rate-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2mm 0 2.7mm 0;
+      font-size: 9.3pt;
+      line-height: 1.1;
+    }
+
+    .delay-rate-table td {
+      border: none;
+      padding: 0 2mm 1.3mm 0;
+      vertical-align: top;
+    }
+
+    .delay-rate-table td:first-child {
+      width: 8mm;
+    }
+
+    .delay-rate-table td:nth-child(2) {
+      width: 45mm;
+    }
+
+    .delay-rate-table td:nth-child(3) {
+      width: auto;
+    }
+
+    /* =========================
+   TERMS PAGE 8
+   SECTION 6.1 - 6.9
+   ========================= */
+
+    .terms-page-5-content {
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 33mm;
+      font-size: 9.65pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-5-content h3 {
+      font-size: 10.4pt;
+      font-weight: 700;
+      margin: 0 0 5mm 0;
+    }
+
+    .terms-page-5-content .term-row {
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 3.3mm;
+    }
+
+    .terms-page-5-content .term-no {
+      font-size: 9.65pt;
+      line-height: 1.12;
+    }
+
+    .terms-page-5-content .term-text {
+      font-size: 9.65pt;
+      line-height: 1.12;
+    }
+
+    /* =========================
+   TERMS PAGE 9
+   SECTION 7.1 - 8.1
+   ========================= */
+
+    .terms-page-6-content {
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 33mm;
+      font-size: 9.45pt;
+      line-height: 1.1;
+    }
+
+    .terms-page-6-content h3 {
+      font-size: 10.4pt;
+      font-weight: 700;
+      margin: 0 0 4.5mm 0;
+    }
+
+    .terms-page-6-content .term-row {
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 3.1mm;
+    }
+
+    .terms-page-6-content .term-no {
+      font-size: 9.45pt;
+      line-height: 1.1;
+    }
+
+    .terms-page-6-content .term-text {
+      font-size: 9.45pt;
+      line-height: 1.1;
+    }
+
+    .rates-title {
+      margin-top: 5.5mm !important;
+      margin-bottom: 1.5mm !important;
+    }
+
+    .rates-validity {
+      margin-left: 13mm;
+      margin-bottom: 4mm;
+      font-size: 9.45pt;
+      line-height: 1.1;
+    }
+
+    .rates-intro-row {
+      margin-bottom: 3.5mm !important;
+    }
+
+    .overtime-rate-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-left: 13mm;
+      width: calc(100% - 13mm);
+      font-size: 9.45pt;
+      line-height: 1.1;
+    }
+
+    .overtime-rate-table td {
+      border: 1px solid #bfbfbf;
+      padding: 0 0 3.2mm 0;
+      vertical-align: top;
+    }
+
+    .overtime-rate-table .rate-percent {
+      width: 27mm;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    /* =========================
+   TERMS PAGE 10
+   SECTION 8.2 + FINAL FOOTER
+   ========================= */
+
+    .terms-page-7-content {
+      top: 43mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 95mm;
+      font-size: 9.75pt;
+      line-height: 1.14;
+    }
+
+    .terms-page-7-content .term-row {
+      grid-template-columns: 13mm auto;
+      column-gap: 3mm;
+      margin-bottom: 3.2mm;
+    }
+
+    .terms-page-7-content .term-no {
+      font-size: 9.75pt;
+      line-height: 1.14;
+    }
+
+    .terms-page-7-content .term-text {
+      font-size: 9.75pt;
+      line-height: 1.14;
+    }
+
+    .terms-page-7-content .term-text p {
+      margin: 3mm 0 0 0;
+    }
+
+    /* Footer akhir halaman 10 */
+    .terms-final-footer {
+      position: absolute;
+      left: 25mm;
+      right: 24mm;
+      bottom: 43mm;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      column-gap: 12mm;
+      align-items: start;
+    }
+
+    .company-spaced-final {
+      margin: 0;
+      font-size: 10.5pt;
+      font-weight: 700;
+      letter-spacing: 2.8px;
+      white-space: nowrap;
+    }
+
+    .final-footer-address {
+      font-size: 8.3pt;
+      line-height: 1.08;
+    }
+
+    .footer-contact-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 1.5mm 0;
+      font-size: 8.3pt;
+      line-height: 1.08;
+    }
+
+    .footer-contact-table td {
+      padding: 0;
+      border: none;
+      vertical-align: top;
+    }
+
+    .footer-contact-table td:first-child {
+      width: 10mm;
+    }
+
+    .terms-final-footer-logo {
+      position: absolute;
+      right: 24mm;
+      bottom: 30mm;
+      width: 70mm;
+      height: auto;
+    }
+
+    .terms-page-7 .hr-bottom {
+      position: absolute;
+      left: 22mm;
+      right: 16mm;
+      bottom: 31mm;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .terms-page-7 .copyright-bottom {
+      position: absolute;
+      left: 24mm;
+      bottom: 4mm;
+      font-size: 8pt;
+      color: #666;
+    }
+
+    .terms-page-7 .page-no-bottom {
+      position: absolute;
+      right: 18mm;
+      bottom: 18mm;
+      font-size: 10.5pt;
+      color: #777;
+      letter-spacing: 2px;
+    }
+
+
+
+
+
+    /* =====================================================
+       DYNAMIC TERMS & CONDITIONS PAGINATION
+       -----------------------------------------------------
+       Halaman T&C lama hanya digunakan sebagai sumber data.
+       JavaScript di bagian akhir dokumen akan menyusun ulang
+       semua item T&C yang aktif berdasarkan tinggi halaman.
+       ===================================================== */
+
+    .terms-source-page {
+      display: none !important;
+    }
+
+    #dynamic-terms-pages {
+      display: block;
+    }
+
+    .dynamic-terms-page {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    .dynamic-terms-page .doc-header {
+      position: absolute;
+      top: 14mm;
+      left: 22mm;
+      right: 23mm;
+      height: 16mm;
+    }
+
+    .dynamic-terms-page .doc-header img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .dynamic-terms-content {
+      position: absolute;
+      top: 0mm;
+      left: 25mm;
+      right: 24mm;
+      bottom: 44mm;
+      overflow: hidden;
+      font-size: 9.65pt;
+      line-height: 1.14;
+    }
+
+    /* Menghilangkan jarak enter berlebih dari style p global */
+    .dynamic-terms-content p,
+    .dynamic-terms-content .term-text p {
+      margin: 0;
+    }
+
+    .dynamic-terms-content .terms-main-title {
+      margin: 0 0 6mm 0;
+      text-align: center;
+      font-size: 10.8pt;
+      font-weight: 700;
+      line-height: 1.2;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .dynamic-terms-content h3,
+    .dynamic-terms-content h3.terms-section-title-long {
+      margin: 0 0 2.4mm 0 !important;
+      font-size: 10.35pt;
+      font-weight: 700;
+      line-height: 1.18;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .dynamic-terms-content .term-row {
+      display: grid;
+      grid-template-columns: 13mm minmax(0, 1fr);
+      column-gap: 3mm;
+      margin: 0 0 2.6mm 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .dynamic-terms-content .term-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .dynamic-terms-content .term-no,
+    .dynamic-terms-content .term-text {
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    .dynamic-terms-content .term-text>*+* {
+      margin-top: 1.7mm;
+    }
+
+    .dynamic-terms-content .terms-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 1.7mm 0 1.7mm 0;
+    }
+
+    .dynamic-terms-content .terms-bullets li {
+      position: relative;
+      padding-left: 5mm;
+      margin: 0 0 1mm 0;
+    }
+
+    .dynamic-terms-content .terms-bullets li:last-child {
+      margin-bottom: 0;
+    }
+
+    .dynamic-terms-content .terms-bullets li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+    }
+
+    .dynamic-terms-content .appropriate-standard-title,
+    .dynamic-terms-content .delay-title,
+    .dynamic-terms-content .rates-title {
+      margin: 1.7mm 0 1.2mm 0 !important;
+    }
+
+    .dynamic-terms-content .delay-rate-table,
+    .dynamic-terms-content .overtime-rate-table {
+      margin-top: 1.7mm;
+      margin-bottom: 0;
+      font-size: inherit;
+      line-height: inherit;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .dynamic-terms-content .overtime-rate-table {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .dynamic-terms-content .overtime-rate-table td {
+      padding: 1.1mm 1.5mm;
+    }
+
+    .dynamic-terms-content .rates-validity {
+      margin: -0.8mm 0 2.8mm 13mm;
+      font-size: inherit;
+      line-height: inherit;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .dynamic-terms-page .hr-bottom {
+      position: absolute;
+      left: 22mm;
+      right: 16mm;
+      bottom: 31mm;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .dynamic-terms-page .copyright-bottom {
+      position: absolute;
+      left: 24mm;
+      bottom: 4mm;
+      font-size: 8pt;
+      color: #666;
+    }
+
+    .dynamic-terms-page .page-no-bottom {
+      position: absolute;
+      right: 18mm;
+      bottom: 18mm;
+      font-size: 10.5pt;
+      color: #777;
+      letter-spacing: 2px;
+    }
+
+    .dynamic-terms-page .terms-final-footer-logo {
+      position: absolute;
+      right: 24mm;
+      bottom: 32mm;
+      width: 70mm;
+      height: auto;
+    }
+
+    /* Digunakan sementara saat browser mengukur apakah blok masih muat */
+    .dynamic-terms-content.is-measuring {
+      overflow: hidden;
+    }
+
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .page {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="page cover">
+    <div class="vertical-title">QUOTATION FOR SERVICE</div>
+    <img class="cover-logo" src="{{logo3Base64}}" alt="Loesche Logo" />
+    <div class="content cover-content">
+      <h1 style="font-size: 24pt; margin-bottom: 3mm; line-height: 1.1; color: #111;">
+        {{customerName}}
+      </h1>
+      <p style="font-size: 14pt; color: #555; margin-bottom: 8mm; line-height: 1.4;">
+        {{location}}<br />
+        <strong>{{millType}}</strong>
+      </p>
+      <img class="plant" src="{{coverBase64}}" alt="Loesche mill" />
+      <p>Date: {{quotationDateFormatted}}</p>
+      <p style="font-size: 16pt; margin-top: 8mm">Quotation - No: <span>{{quotationNumber}}</span>
+      </p>
+      <p>
+        Customer Service<br />Sales Departement<br />Tel.: +62 21 571 2232<br />sales.lind@loesche.com
+      </p>
+    </div>
+
+  </section>
+
+  <section class="page quotation-page">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="company-address-top">
+      PT Loesche Indonesia, Wisma Metropolitan 1, WTC 5. 7th floor, Jl Jend
+      Sudirman Kav.29 Jakarta 12920
+    </div>
+
+    <div class="top-separator"></div>
+
+    <!-- Customer address kiri atas -->
+    <div class="customer-address" style="white-space: pre-wrap;">{{customerAddress}}</div>
+
+    <!-- Kotak quotation kanan atas -->
+    <div class="quotation-box">
+      <div class="quotation-box-title">QUOTATION</div>
+
+      <div class="quotation-grid">
+        <div>
+          <div class="q-label">Quotation no./location/project-no.</div>
+          <div class="q-value bold"><span>{{quotationNumber}} / {{location}}/{{projectNo}}</span></div>
+        </div>
+        <div>
+          <div class="q-label">Date</div>
+          <div class="q-value bold"><span>{{quotationDateFormatted}}</span></div>
+        </div>
+
+        <div>
+          <div class="q-label">Concerned is</div>
+          <div class="q-value">Sales Departement</div>
+        </div>
+        <div>
+          <div class="q-label">Tel no.</div>
+          <div class="q-value">+62 21 5712232 ext 103</div>
+        </div>
+
+        <div>
+          <div class="q-label">Our Fax-no.</div>
+          <div class="q-value">+62 21 5712266</div>
+        </div>
+        <div>
+          <div class="q-label">Mail</div>
+          <div class="q-value mail">sales.lind@loesche.com</div>
+        </div>
+
+        <div class="q-full">
+          <div class="q-label">Your client no.</div>
+          <div class="q-value">-</div>
+        </div>
+
+        <div class="q-full">
+          <div class="q-label">Inquiry no./Date</div>
+          <div class="q-value"><span>{{customerInquiryNumber}}</span> / {{inquiryDateLong}}</div>
+        </div>
+
+        <div class="q-full">
+          <div class="q-label">Validity period</div>
+          <div class="q-value"><span>{{validityDateFormattedShort}}</span></div>
+        </div>
+
+        <div class="q-full">
+          <div class="q-label">Attention:</div>
+          <div class="q-value"><span>{{attentionTitle}} {{attention}}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opening letter -->
+    <div class="opening-letter">
+      <p>Dear Sir,</p>
+
+      <p>
+        With reference to your {{inquirySourceDesc}} dated on {{inquiryDateLong}}, PT Loesche Indonesia is happy
+        to offer our service for Mill type <span>{{millType}}</span>.
+        We are pleased to quote you as follows:
+      </p>
+    </div>
+
+    <!-- Price table -->
+    <div class="price-table-wrapper">
+      <table class="quotation-price-table">
+        <thead>
+          <tr>
+            <th style="width: 14mm;"><span>Pos.</span></th>
+            <th style="width: 28mm;"><span>Qty/Unit</span></th>
+            <th><span>Description</span></th>
+            <th style="width: 26mm;"><span>Unit Value<br />{{currency}}</span></th>
+            <th style="width: 30mm;"><span>Net Value<br />{{currency}}</span></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="group-row">
+            <td></td>
+            <td></td>
+            <td>
+              <div class="service-title">
+                Service by Loesche Specialist at<br />
+                {{location}} for {{millType}}
+              </div>
+              <div class="service-line"></div>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          {{#each normalItems}}
+          <tr>
+            <td class="center">{{this.pos}}</td>
+            <td class="center">{{this.qtyStr}}</td>
+            <td class="desc-block">
+              <div style="font-weight: 700;">{{this.customerRequest}}</div>
+              <div style="font-style: italic; color: #444; margin-top: 1mm; white-space: pre-line;">{{this.note}}</div>
+            </td>
+            <td class="center">{{this.unitPriceStr}}</td>
+            <td class="center">{{this.netValueStr}}</td>
+          </tr>
+          {{/each}}
+
+          {{#if hasGlobalDiscount}}
+          <tr class="exclude-row top-line" style="font-weight: 600;">
+            <td></td>
+            <td></td>
+            <td colspan="2" style="text-align: left; padding-top: 1.3mm;">Sub Total Value</td>
+            <td class="center" style="padding-top: 1.3mm;">{{subTotalStr}}</td>
+          </tr>
+          <tr class="exclude-row" style="color: #d32f2f;">
+            <td></td>
+            <td></td>
+            <td colspan="2" style="text-align: left; padding-top: 1.3mm;">Discount</td>
+            <td class="center" style="padding-top: 1.3mm;">-{{discountAmountStr}}</td>
+          </tr>
+          {{/if}}
+          <tr class="total-row {{#unless hasGlobalDiscount}} top-line {{/unless}}">
+            <td></td>
+            <td></td>
+            <td colspan="2">TOTAL VALUE (exclude any applicable tax)</td>
+            <td class="center">{{totalPriceStr}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="white-space: pre-wrap; margin-top: 6mm;">{{pricingConditionText}}</p>
+
+      <div class="scope-content">
+        {{#if remarks}}
+        <h2><span>Additional Remarks</span></h2>
+        <div style="white-space: pre-wrap; margin-bottom: 6mm;">{{remarks}}</div>
+        {{/if}}
+
+        <h2><span>Scope of Work</span></h2>
+
+        <div style="white-space: pre-wrap; margin-bottom: 6mm;">{{scopeOfWork}}</div>
+
+        <h2>Total Price</h2>
+
+        <p>
+          The total price will be invoiced according to our “TERMS AND CONDITIONS OF
+          PT LOESCHE INDONESIA FOR TECHNICAL AUDIT ”
+        </p>
+
+        <p class="bold">
+          <span>Local transport from hotel to site, daily transportation as well as accommodation are provided by the
+            client.</span>
+        </p>
+
+        <p>
+          In case Loesche has to provide mobilization, accommodation and
+          transportation:
+        </p>
+
+        <ul class="scope-list">
+          <li>
+            Local transport from Jakarta / hotel to site and daily transportation
+            will be charged based on actual invoice + 10% handling fee.
+          </li>
+          <li>
+            Flight return ticket will be charged as per the original bills paid +
+            10% handling fee
+          </li>
+          <li>
+            Accommodation will be charged as per the original bills paid + 10%
+            handling fee
+          </li>
+        </ul>
+
+        <p class="italic price-note">
+          Our prices are net exclusive of any statutory turnover tax
+        </p>
+
+        <h2>Payment Term</h2>
+
+        <p>
+          {{paymentTerms}}
+        </p>
+
+        <ul class="scope-list">
+          <li>
+            Mode of payment: <span style="white-space: pre-wrap;">{{paymentMethod}}</span>
+          </li>
+          <li>
+            Documents required:<br />
+            <span class="doc-indent" style="white-space: pre-wrap;">{{paymentRequirements}}</span>
+          </li>
+        </ul>
+
+        <p class="closing-text">
+          We trust that our quotation is of interest to you
+        </p>
+
+        <p class="signature-block">
+          <strong>PT LOESCHE INDONESIA</strong><br />
+          <span class="italic">Customer Service</span>
+        </p>
+
+        <p class="company-spaced">
+          P T&nbsp;&nbsp;L O E S C H E&nbsp;&nbsp;I N D O N E S I A
+        </p>
+      </div>
+
+
+
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-1">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-1-content">
+      <div class="terms-main-title">
+        TERMS AND CONDITIONS OF PT LOESCHE INDONESIA
+      </div>
+
+      {{#if showTC_1}}
+      <h3>1. Scope of Application</h3>
+      {{/if}}
+
+      {{#if showTC_1_1}}
+      <div class="term-row">
+        <div class="term-no">1.1</div>
+        <div class="term-text {{tcOverrideClass_1_1}}">
+          <div class="tc-override">{{tcOverrideHtml_1_1}}</div>
+          <div class="tc-original">
+            <p>Unless otherwise agreed in each individual case, the following Terms and Conditions shall exclusively
+              apply to
+              all assembly, assembly supervision, commissioning and external service work taken on by us. The Terms and
+              Conditions shall apply accordingly to repair work which we take on. Any deviating terms and conditions or
+              counter-confirmations of the Customer shall only commit us, if, and to the extent that we have expressly
+              consented thereto in writing. In particular our silence to such deviating terms and conditions shall not
+              be
+              considered acknowledgement or consent. We hereby expressly object to such deviating terms and conditions
+              or
+              counter-confirmations of the Customer.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_2}}
+      <h3>2. Price</h3>
+      {{/if}}
+
+      {{#if showTC_2_1}}
+      <div class="term-row">
+        <div class="term-no">2.1</div>
+        <div class="term-text {{tcOverrideClass_2_1}}">
+          <div class="tc-override">{{tcOverrideHtml_2_1}}</div>
+          <div class="tc-original">
+            <p>Unless otherwise expressly agreed upon in writing, we shall charge for our services by time and expense
+              pursuant to our cost rates (attached hereto) prevailing at the time of execution.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_2_2}}
+      <div class="term-row">
+        <div class="term-no">2.2</div>
+        <div class="term-text {{tcOverrideClass_2_2}}">
+          <div class="tc-override">{{tcOverrideHtml_2_2}}</div>
+          <div class="tc-original">
+            <p>Our prices are net exclusive of any statutory turnover tax.</p>
+            <p>Any withholding tax required by the applicable laws and regulations of Indonesia shall be withheld by the
+              Client and remitted to the relevant tax authority. The Client shall provide the corresponding tax
+              withholding certificate promptly after such remittance.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_2_3}}
+      <div class="term-row">
+        <div class="term-no">2.3</div>
+        <div class="term-text {{tcOverrideClass_2_3}}">
+          <div class="tc-override">{{tcOverrideHtml_2_3}}</div>
+          <div class="tc-original">
+            <p>Any agreement on a flat-rate price instead of a fee pursuant to Subcondition 2.2 must be made expressly.
+              Our flat-rate price quotations are calculated on the following basis:</p>
+            <ul class="terms-bullets">
+              <li>timely commencement of assembly work,</li>
+              <li>normal and uninterrupted course of assembly work and</li>
+              <li>assembly work during normal working hours and on working days, but the Client shall enable services
+                taken on by us to also be rendered outside of or in addition to normal working hours.</li>
+            </ul>
+            <p>If the aforementioned bases of our price calculation do not materialise or exist for reasons attributable
+              to the Client or if the Client requests changes to services taken on by us, the Client shall be separately
+              invoiced for additional expenses incurred as a result thereof pursuant to our assembly rates.</p>
+            <p>This also applies to assembly work requested by the Client outside of normal working hours and working
+              days
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_2_4}}
+      <div class="term-row">
+        <div class="term-no">2.4</div>
+        <div class="term-text {{tcOverrideClass_2_4}}">
+          <div class="tc-override">{{tcOverrideHtml_2_4}}</div>
+          <div class="tc-original">
+            <p>Working time sheets presented to the Client for signing from time to time shall serve as proof of
+              services
+              rendered.</p>
+            <p>We shall charge for our services once assembly work is completed or (if assembly work takes longer than
+              one
+              month) at the end of each month. Invoices shall be due and payable immediately.</p>
+            <p>Special formalities regarding invoicing shall be communicated by the Client in good time upon requesting
+              our staff.</p>
+            <p>Voluntary services agreed upon with us may not be deducted.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-2">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-2-content">
+      {{#if showTC_3}}
+      <h3 class="terms-section-title-long">3. Duties of our Assembly Supervisor and Commissioning Engineer</h3>
+      {{/if}}
+
+      {{#if showTC_3_1}}
+      <div class="term-row">
+        <div class="term-no">3.1</div>
+        <div class="term-text {{tcOverrideClass_3_1}}">
+          <div class="tc-override">{{tcOverrideHtml_3_1}}</div>
+          <div class="tc-original">
+            <p>Upon arrival at the building site our assembly supervisor shall inspect all dimensions of buildings and
+              foundations. The Client shall name a contact person. The assembly supervisor shall draw up a record
+              together
+              with this contact person.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_2}}
+      <div class="term-row">
+        <div class="term-no">3.2</div>
+        <div class="term-text {{tcOverrideClass_3_2}}">
+          <div class="tc-override">{{tcOverrideHtml_3_2}}</div>
+          <div class="tc-original">
+            <p>With the aid of package lists and drawings our assembly supervisor shall check all machine and pipe parts
+              delivered by us. Possible transport damage, losses during transportation or non-deliveries shall be
+              recorded
+              and immediately reported to us. We or the Client shall inform the insurance company without delay.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_3}}
+      <div class="term-row">
+        <div class="term-no">3.3</div>
+        <div class="term-text {{tcOverrideClass_3_3}}">
+          <div class="tc-override">{{tcOverrideHtml_3_3}}</div>
+          <div class="tc-original">
+            <p>Our assembly supervisor shall be entitled to give the Client&#x27;s staff all instructions necessary in
+              connection with our deliveries for proper assembly. For this purpose, our assembly supervisor shall make
+              available to the Client&#x27;s staff all information of a technical nature. Furthermore, the assembly
+              supervisor shall be obliged to instruct operating and maintenance staff during his supervisory work.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_4}}
+      <div class="term-row">
+        <div class="term-no">3.4</div>
+        <div class="term-text {{tcOverrideClass_3_4}}">
+          <div class="tc-override">{{tcOverrideHtml_3_4}}</div>
+          <div class="tc-original">
+            <p>Together with the Client&#x27;s contact person our assembly supervisor shall draw up records of each
+              completed assembly of machine deliveries and subsequent mechanical test runs.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_5}}
+      <div class="term-row">
+        <div class="term-no">3.5</div>
+        <div class="term-text {{tcOverrideClass_3_5}}">
+          <div class="tc-override">{{tcOverrideHtml_3_5}}</div>
+          <div class="tc-original">
+            <p>Our assembly supervisor shall be present at the commencement of commissioning and shall support the
+              commissioning engineer by supervising the machines.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_6}}
+      <div class="term-row">
+        <div class="term-no">3.6</div>
+        <div class="term-text {{tcOverrideClass_3_6}}">
+          <div class="tc-override">{{tcOverrideHtml_3_6}}</div>
+          <div class="tc-original">
+            <p>Our commissioning engineer shall take over responsibility for the plant from the assembly supervisory
+              upon
+              commencement of idle running tests and the technical function test of the entire plant. The Client shall
+              name a contact person. Together with these two a record of proper execution of these idle running tests
+              and
+              the function test shall be drawn up.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_7}}
+      <div class="term-row">
+        <div class="term-no">3.7</div>
+        <div class="term-text {{tcOverrideClass_3_7}}">
+          <div class="tc-override">{{tcOverrideHtml_3_7}}</div>
+          <div class="tc-original">
+            <p>Thereafter our commissioning engineer shall commission the grinding mill along with charging material.
+              Commissioning shall be carried out under his responsibility (i.e. the instructions he gives to the
+              Client&#x27;s operating staff for maintaining and optimising grinding operations or also for protecting
+              the
+              machines delivered must be accepted and followed by the Client&#x27;s staff).</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_8}}
+      <div class="term-row">
+        <div class="term-no">3.8</div>
+        <div class="term-text {{tcOverrideClass_3_8}}">
+          <div class="tc-override">{{tcOverrideHtml_3_8}}</div>
+          <div class="tc-original">
+            <p>Our commissioning engineer together with the Client&#x27;s staff shall agree upon a date for plant
+              performance runs. The record drawn up in this connection (including entries of performance data attained)
+              shall be countersigned by the Client&#x27;s employee responsible. This applies, even if the performance
+              parameters mentioned in the technical conditions are not attained. In this case the reasons for
+              non-attainment shall be entered under the point &quot;Complaints&quot;.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_3_9}}
+      <div class="term-row">
+        <div class="term-no">3.9</div>
+        <div class="term-text {{tcOverrideClass_3_9}}">
+          <div class="tc-override">{{tcOverrideHtml_3_9}}</div>
+          <div class="tc-original">
+            <p>During the whole time whilst present our commissioning engineer shall be obliged to make all essential
+              technical information available to the Client&#x27;s staff and train this staff in how to operate the
+              grinding mill.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-3">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-3-content">
+      {{#if showTC_4}}
+      <h3>4. Safety, Prevention of Accidents</h3>
+      {{/if}}
+
+      {{#if showTC_4_1}}
+      <div class="term-row">
+        <div class="term-no">4.1</div>
+        <div class="term-text {{tcOverrideClass_4_1}}">
+          <div class="tc-override">{{tcOverrideHtml_4_1}}</div>
+          <div class="tc-original">
+            <p>In good time prior to commencement of assembly work the Client shall inform us of safety regulations
+              (particularly rules for the prevention of accidents) applicable to the place where assembly works is to be
+              carried out.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_4_2}}
+      <div class="term-row">
+        <div class="term-no">4.2</div>
+        <div class="term-text {{tcOverrideClass_4_2}}">
+          <div class="tc-override">{{tcOverrideHtml_4_2}}</div>
+          <div class="tc-original">
+            <p>The Client shall take safety precautions (including any essential special measures) necessary for
+              protecting persons and property at the place where assembly work is to be carried out.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_4_3}}
+      <div class="term-row">
+        <div class="term-no">4.3</div>
+        <div class="term-text {{tcOverrideClass_4_3}}">
+          <div class="tc-override">{{tcOverrideHtml_4_3}}</div>
+          <div class="tc-original">
+            <p>The Client shall inform our on-site assembly staff about existing safety regulations, in so far as these
+              are relevant to the execution of assembly work. In so far as a building site manager or project manager is
+              appointed by the Client, this person shall ensure that safety regulations (particularly rules for the
+              prevention of accidents) are observed by our assembly staff. The Client shall immediately notify us of
+              infringements of safety regulations by our assembly staff. In the case of gross infringements the Client
+              may
+              (in agreement with us) refuse to allow the infringing party access to the place of assembly.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_4_4}}
+      <div class="term-row">
+        <div class="term-no">4.4</div>
+        <div class="term-text {{tcOverrideClass_4_4}}">
+          <div class="tc-override">{{tcOverrideHtml_4_4}}</div>
+          <div class="tc-original">
+            <p>In the event of emergencies / accidents the Client shall be obliged to give our assembly staff
+              appropriate
+              assistance and immediately inform us.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_4_5}}
+      <div class="term-row">
+        <div class="term-no">4.5</div>
+        <div class="term-text {{tcOverrideClass_4_5}}">
+          <div class="tc-override">{{tcOverrideHtml_4_5}}</div>
+          <div class="tc-original">
+            <p>During assembly, commissioning and assembly supervision the Client shall effect at its expense
+              corresponding assembly insurance which shall also cover us and our staff whilst working at the building
+              site, whereby recourse to us shall be excluded.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5}}
+      <h3 class="terms-section-title-long">5. Co-operation and Technical Assistance on the Part of the Client</h3>
+      {{/if}}
+
+      {{#if showTC_5_1}}
+      <div class="term-row">
+        <div class="term-no">5.1</div>
+        <div class="term-text {{tcOverrideClass_5_1}}">
+          <div class="tc-override">{{tcOverrideHtml_5_1}}</div>
+          <div class="tc-original">
+            <p>In good time prior to commencement of our services the Client shall be obliged to obtain all public
+              permits
+              and any essential private licenses necessary in this connection, to enable our services to commence on
+              time
+              and be carried out without interruption. This particularly applies to work permits, visas, special permits
+              for overtime (work on Sundays and public holidays) and special emergencies.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2}}
+      <div class="term-row">
+        <div class="term-no">5.2</div>
+        <div class="term-text {{tcOverrideClass_5_2}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2}}</div>
+          <div class="tc-original">
+            <p>The Client undertakes to effectively assist the timely rendering of services taken on by us. In
+              particular
+              the Client shall at its expense and risk take on and provide in due time the following deliveries and
+              services:</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-4">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-4-content">
+      {{#if showTC_5_2_a}}
+      <div class="term-row sub-term">
+        <div class="term-no">a)</div>
+        <div class="term-text {{tcOverrideClass_5_2_a}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_a}}</div>
+          <div class="tc-original">
+            <p>Trained machine fitters, high-voltage electricians, arc welders and helpers along with respective tools.
+              The Client&#x27;s staff must be qualified for the respective work and be prepared to work in compliance
+              with
+              our assembly staff&#x27;s instructions. We accept no liability for the Client&#x27;s staff.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_b}}
+      <div class="term-row sub-term">
+        <div class="term-no">b)</div>
+        <div class="term-text {{tcOverrideClass_5_2_b}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_b}}</div>
+          <div class="tc-original">
+            <p>All foundations including the sealing of anchoring holes, overground and underground buildings, fortified
+              approach roads to the assembly site.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_c}}
+      <div class="term-row sub-term">
+        <div class="term-no">c)</div>
+        <div class="term-text {{tcOverrideClass_5_2_c}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_c}}</div>
+          <div class="tc-original">
+            <p>Auxiliary equipment required for assembly and commissioning or repair work such as for example tools,
+              hoisting gear, welding equipment (including all essential protective equipment stipulated by the mutual
+              indemnity association and/or by law) as well as essential implements and materials such as lubricating and
+              hydraulic oils, scaffolding, wedges, spacers for adjusting and aligning, cleaning materials and sealing
+              agents, all energy such as electricity, water, compressed air, welding gases, supply of all consumables
+              and
+              fuels including essential connections at the assembly site. If auxiliary assembly equipment has to be
+              supplied by our assembly staff, the cost thereof shall be charged.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_d}}
+      <div class="term-row sub-term">
+        <div class="term-no">d)</div>
+        <div class="term-text {{tcOverrideClass_5_2_d}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_d}}</div>
+          <div class="tc-original">
+            <p>Adequate lighting of the assembly site.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_e}}
+      <div class="term-row sub-term">
+        <div class="term-no">e)</div>
+        <div class="term-text {{tcOverrideClass_5_2_e}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_e}}</div>
+          <div class="tc-original">
+            <p>Suitable dry, illuminated and lockable rooms right next to the assembly site for storing switch cabinets
+              (particularly machine parts, tools of our assembly staff etc.).</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_f}}
+      <div class="term-row sub-term">
+        <div class="term-no">f)</div>
+        <div class="term-text {{tcOverrideClass_5_2_f}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_f}}</div>
+          <div class="tc-original">
+            <p>For our assembly staff suitable well-illuminated recreation rooms fitted with all essential furnishings
+              and
+              fittings including heating/air conditioning, lighting, washing and sanitary facilities (including daily
+              cleaning free of charge), a dry, lockable changing room with first aid equipment as well as a telephone
+              fax
+              machine and internet access (E-Mail) for our assembly manager. These premises must also have essential
+              equipment for drawing upreports and records.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-5">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-5-content">
+      {{#if showTC_5_2_g}}
+      <div class="term-row sub-term">
+        <div class="term-no">g)</div>
+        <div class="term-text {{tcOverrideClass_5_2_g}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_g}}</div>
+          <div class="tc-original">
+            <p>Unloading assembly parts, tools and auxiliary equipment at the assembly site.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_h}}
+      <div class="term-row sub-term">
+        <div class="term-no">h)</div>
+        <div class="term-text {{tcOverrideClass_5_2_h}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_h}}</div>
+          <div class="tc-original">
+            <p>Proper storage of assembly parts at the place of assembly (including protection against theft, damage and
+              effects of the weather) and transportation thereof to the assembly site as well as loading and unloading,
+              if
+              it is not possible to store assembly parts right next to the assembly site.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_i}}
+      <div class="term-row sub-term">
+        <div class="term-no">i)</div>
+        <div class="term-text {{tcOverrideClass_5_2_i}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_i}}</div>
+          <div class="tc-original">
+            <p>Protective clothing and protective devices necessary as a result of special circumstances at the assembly
+              site.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_j}}
+      <div class="term-row sub-term">
+        <div class="term-no">j)</div>
+        <div class="term-text {{tcOverrideClass_5_2_j}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_j}}</div>
+          <div class="tc-original">
+            <p>The provision of appropriate housing accommodation consistent with approproate standards* and located
+              near
+              to the assembly site for our assembly staff. If the Client fails to find such accommodation by the time
+              our
+              assembly staff arrive, the assembly staff themselves shall endeavour to find accommodation. The Client
+              shall
+              bear the resulting additional cost of lost time and expenditure in connection therewith.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_k}}
+      <div class="term-row sub-term">
+        <div class="term-no">k)</div>
+        <div class="term-text {{tcOverrideClass_5_2_k}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_k}}</div>
+          <div class="tc-original">
+            <p class="appropriate-standard-title">* appropriate standard shall mean:</p>
+            <p>For each person, at least one room (approx. 20 m²) with laundry service, WC and shower (warm and cold
+              water) shall be provided. The room(s) shall be sufficiently equipped with furniture (bed, wardrobe, desk
+              chair, table), be air conditioned (air condition/heating) and contain refrigerator, telephone and
+              satellite
+              television (min. one German or English program). In camps, there must be the possibility to prepare a meal
+              individually inside the accommodation area.</p>
+            <p>The accommodation/room shall be cleaned daily free of charge and the towels shall be changed daily. The
+              bed
+              linen shall be changed every week.</p>
+            <p>Additional washing-, cleaning- and disinfection products and bottled drinking-water shall be provided
+              free
+              of charge by the Client. The same applies to electricity, water, gas etc.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_l}}
+      <div class="term-row sub-term">
+        <div class="term-no">l)</div>
+        <div class="term-text {{tcOverrideClass_5_2_l}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_l}}</div>
+          <div class="tc-original">
+            <p>Suitable means of transportation (e. g. factory car, hired car, taxi) which shall be made available to
+              our
+              staff at all times during the period of assembly and commissioning. The Client shall organise and
+              undertake
+              to transport our personnel between airport and accommodation on arrival and at departure. If the Client
+              provides a vehicle with driver, both vehicle and driver shall be available to us.</p>
+            <p>The effecting of insurance for the entire object of assembly (plant parts) and assembly equipment (tools
+              and auxiliary machines) from the time of delivery up to the time of acceptance for covering against all
+              unforeseen and sudden property damage and losses in the stages of formation and testing (assembly all-risk
+              insurance).</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_2_m}}
+      <div class="term-row sub-term">
+        <div class="term-no">m)</div>
+        <div class="term-text {{tcOverrideClass_5_2_m}}">
+          <div class="tc-override">{{tcOverrideHtml_5_2_m}}</div>
+          <div class="tc-original">
+            <p>Ensuring proper working of the machines and equipment which are not part of our scope of supply.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_3}}
+      <div class="term-row">
+        <div class="term-no">5.3</div>
+        <div class="term-text {{tcOverrideClass_5_3}}">
+          <div class="tc-override">{{tcOverrideHtml_5_3}}</div>
+          <div class="tc-original">
+            <p>The Client&#x27;s technical assistance must ensure that assembly work and subsequent commissioning are
+              begun immediately after the assembly staff arrive and can be carried out without delay or interruption by
+              the Client. In so far as special plans or instructions are necessary on our part, we shall make these
+              available to the Client in good time. If the Client fails to meet its obligations referred to under
+              Subcondition 5.2, we shall be entitled to set the Client a reasonable respite period for the performance
+              thereof. Once this respite period has expired without effect, we shall be entitled (but not obliged) to
+              carry out the Client&#x27;s duties in its place and at its expense. This shall not affect any other legal
+              rights and claims on our part.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_5_4}}
+      <div class="term-row">
+        <div class="term-no">5.4</div>
+        <div class="term-text {{tcOverrideClass_5_4}}">
+          <div class="tc-override">{{tcOverrideHtml_5_4}}</div>
+          <div class="tc-original">
+            <p>In the course of assembly work our assembly staff and the Client&#x27;s skilled staff (under our
+              instructions) shall carry out the mechanical assembly of the delivery item and immediately thereafter the
+              commissioning (function test).</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-6">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-6-content">
+      {{#if showTC_6}}
+      <h3>6. Works/Deliveries carried out by the Customer</h3>
+      {{/if}}
+
+      {{#if showTC_6_1}}
+      <div class="term-row">
+        <div class="term-no">6.1</div>
+        <div class="term-text {{tcOverrideClass_6_1}}">
+          <div class="tc-override">{{tcOverrideHtml_6_1}}</div>
+          <div class="tc-original">
+            <p>Rectification work and/or delivery of particular items or material provided by the Customer on our
+              request
+              shall be agreed upon between the parties prior to execution. Such agreement shall be made in writing by
+              means of working time sheets, minutes of meeting, amendments to Contract or the like. Only signed
+              documents
+              by authorized representatives of the parties will be accepted as basis for remuneration.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7}}
+      <h3 class="terms-section-title-long">7. Time of Delivery and Bearing of Risk</h3>
+      {{/if}}
+
+      {{#if showTC_7_1}}
+      <div class="term-row">
+        <div class="term-no">7.1</div>
+        <div class="term-text {{tcOverrideClass_7_1}}">
+          <div class="tc-override">{{tcOverrideHtml_7_1}}</div>
+          <div class="tc-original">
+            <p>Dates and periods for our performance shall be agreed upon expressly and in writing in order to be
+              binding.
+              In case of any dates and periods for our performance which are subject to change or only approximate
+              indications (e.g. app., about, etc.), we shall use our best efforts to comply with them.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7_2}}
+      <div class="term-row">
+        <div class="term-no">7.2</div>
+        <div class="term-text {{tcOverrideClass_7_2}}">
+          <div class="tc-override">{{tcOverrideHtml_7_2}}</div>
+          <div class="tc-original">
+            <p>Commencement of the performance time limits / periods quoted by us shall be subject to the conditions
+              that
+              all technical questions have been cleared up, all documents or essential permits to be supplied by the
+              Client have been received in good time, any plans have been clarified and approved in good time and all
+              other obligations of the Client have been properly fulfilled in good time.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7_3}}
+      <div class="term-row">
+        <div class="term-no">7.3</div>
+        <div class="term-text {{tcOverrideClass_7_3}}">
+          <div class="tc-override">{{tcOverrideHtml_7_3}}</div>
+          <div class="tc-original">
+            <p>In case of non-delivery, incorrect or delayed delivery or non-performance, incorrect or delayed
+              performance
+              of any services by our suppliers for reasons beyond our responsibility or in any event of force majeure,
+              we
+              shall be entitled to delay the delivery for the period of such obstruction or withdraw from the contract,
+              either in whole or in part, with respect to the part yet outstanding. Force majeure shall also be strikes,
+              lock-outs, administrative orders and actions, shortage of energy and raw material, shortage of transport
+              capacity, pandemics and epidemics, business obstacles beyond our responsibility, e.g. by fire, flood,
+              destruction of machinery, and any other obstacles that, from an objective point of view, have not been
+              caused by our fault. The above provisions shall also apply if any circumstances should arise which have
+              been
+              mentioned therein and led to a default on our part. The costs caused by the delay shall be borne by the
+              Client.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7_4}}
+      <div class="term-row">
+        <div class="term-no">7.4</div>
+        <div class="term-text {{tcOverrideClass_7_4}}">
+          <div class="tc-override">{{tcOverrideHtml_7_4}}</div>
+          <div class="tc-original">
+            <p>Loesche keeps an internal record, in which Loesche - based on its various contracts and agreed project
+              time
+              schedules with its different clients - schedules the allocation of its different supervisory personnel to
+              the different projects.</p>
+            <p>Therefore it is essential for Loesche that such project time schedules as agreed with the respective
+              client, which also identify the time for allocation of Loesche&#x27;s supervisory personnel (travel dates,
+              start, duration of stay on site etc. with regard to the respective project) are strictly adhered to.</p>
+            <p>Where therefore due to reasons out of the Client&#x27;s sphere (as for example without being limited
+              thereto delay in the preparation of the site, foundations, delays of the Client&#x27;s or third parties
+              deliveries etc.) the allocation of the foreseen Loesche supervisory personnel to the site has to be
+              delayed
+              or interrupted in ratio to the agreed project time schedule, Loesche shall be entitled to claim from the
+              Client the following flat rate as compensation for any period of delay and/or of interruption:</p>
+            <p class="delay-title">Delay for allocation to site (and/or local manufacture)</p>
+            <table class="delay-rate-table">
+              <tr>
+                <td>i)</td>
+                <td>between 1 day up to 7 days</td>
+                <td>60% from the daily rate for the supervisors</td>
+              </tr>
+              <tr>
+                <td>ii)</td>
+                <td>beyond 7 days</td>
+                <td>40% from the daily rate for the supervisors plus cancellation cost for already booked travel and/or
+                  accommodation arrangement or additionally required travels.</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-7">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-7-content">
+      {{#if showTC_7_5}}
+      <div class="term-row">
+        <div class="term-no">7.5</div>
+        <div class="term-text {{tcOverrideClass_7_5}}">
+          <div class="tc-override">{{tcOverrideHtml_7_5}}</div>
+          <div class="tc-original">
+            <p>If waiting periods, extensions of the agreed assembly period and daily travelling times or repeated
+              journeys ensue due to circumstances attributable to the Client, the Client shall bear the resulting
+              additional costs calculated by time and expense pursuant to our delegation rates.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7_6}}
+      <div class="term-row">
+        <div class="term-no">7.6</div>
+        <div class="term-text {{tcOverrideClass_7_6}}">
+          <div class="tc-override">{{tcOverrideHtml_7_6}}</div>
+          <div class="tc-original">
+            <p>If assembly work is interrupted due to circumstances attributable to the Client, the risk in respect of
+              services already rendered shall be passed to the Client for the duration of the interruption.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7_7}}
+      <div class="term-row">
+        <div class="term-no">7.7</div>
+        <div class="term-text {{tcOverrideClass_7_7}}">
+          <div class="tc-override">{{tcOverrideHtml_7_7}}</div>
+          <div class="tc-original">
+            <p>Any claims for damages because of default or non-performance - irrespective of the reason thereof - may
+              be
+              asserted in accordance with the provisions set out in Sec. 10 only.</p>
+            <p>We shall not be in default as long as the Client is in default with the performance of any of his
+              obligations towards us, including obligations arising out of any other contracts.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_7_8}}
+      <div class="term-row">
+        <div class="term-no">7.8</div>
+        <div class="term-text {{tcOverrideClass_7_8}}">
+          <div class="tc-override">{{tcOverrideHtml_7_8}}</div>
+          <div class="tc-original">
+            <p>If assembly work is destroyed or adversely affected prior to acceptance for reasons attributable to the
+              Client, we shall be entitled to charge the agreed price less expenses saved. The same applies in the event
+              that it becomes impossible to carry out assembly work through the fault of the Client.</p>
+            <p>The Client may demand that assembly work be repeated, if and in so far as we can be reasonably expected
+              to
+              do so (particularly in consideration of our other contractual obligations). A fee for repeated assembly
+              work
+              shall again be payable to us based on contract prices.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_8}}
+      <h3>8. Acceptance</h3>
+      {{/if}}
+
+      {{#if showTC_8_1}}
+      <div class="term-row">
+        <div class="term-no">8.1</div>
+        <div class="term-text {{tcOverrideClass_8_1}}">
+          <div class="tc-override">{{tcOverrideHtml_8_1}}</div>
+          <div class="tc-original">
+            <p>Upon our notification of completion of assembly work the Client shall be required to accept our services
+              (i.e. including the delivery item) within 6 months, otherwise within 18 months as from the agreed date of
+              delivery.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_8_2}}
+      <div class="term-row">
+        <div class="term-no">8.2</div>
+        <div class="term-text {{tcOverrideClass_8_2}}">
+          <div class="tc-override">{{tcOverrideHtml_8_2}}</div>
+          <div class="tc-original">
+            <p>The acceptance shall be effected by means of an acceptance run. The acceptance run shall take place under
+              normal working conditions. Its duration is 12 hours of uninterrupted operation. At own cost the Client
+              shall
+              make material available in sufficient quantity and quality, likewise operating personnel, employees,
+              auxiliary and working materials, electricity, heating material, water and other auxiliary materials which
+              we
+              can demand in an appropriate way and in suitable scope for the execution of the acceptance run. The result
+              of the acceptance run shall be recorded in a log and shall be signed by representatives of the Clients and
+              ourselves.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_8_3}}
+      <div class="term-row">
+        <div class="term-no">8.3</div>
+        <div class="term-text {{tcOverrideClass_8_3}}">
+          <div class="tc-override">{{tcOverrideHtml_8_3}}</div>
+          <div class="tc-original">
+            <p>With the termination of the acceptance run the acceptance is regarded as completed. This does not apply
+              if
+              the grinding mill, despite professional operation and conformity to all operating conditions, falls short
+              of
+              the performance parameters mentioned in the technical conditions, whilst taking into consideration the
+              measurement tolerances.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_8_4}}
+      <div class="term-row">
+        <div class="term-no">8.4</div>
+        <div class="term-text {{tcOverrideClass_8_4}}">
+          <div class="tc-override">{{tcOverrideHtml_8_4}}</div>
+          <div class="tc-original">
+            <p>In such a case, the Client shall set us a reasonable respite period in which we are required to bring the
+              supplied equipment into a contractually agreed state and to repeat the acceptance run.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-8">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-8-content">
+      {{#if showTC_8_5}}
+      <div class="term-row">
+        <div class="term-no">8.5</div>
+        <div class="term-text {{tcOverrideClass_8_5}}">
+          <div class="tc-override">{{tcOverrideHtml_8_5}}</div>
+          <div class="tc-original">
+            <p>If the acceptance run is interrupted for reasons for which we are not responsible we are entitled to set
+              a
+              reasonable respite period in which the Client is required to create the preconditions for the carrying out
+              of the acceptance run. If after expiry of such respite period an acceptance run has not taken place for
+              reasons for which we are not responsible, then the acceptance is regarded as having been effected. The
+              additional costs caused by interruptions shall be charged to the Client. The running period already
+              achieved
+              before an interruption for which we are not responsible will be added to the running period remaining
+              after
+              an interruption.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_8_6}}
+      <div class="term-row">
+        <div class="term-no">8.6</div>
+        <div class="term-text {{tcOverrideClass_8_6}}">
+          <div class="tc-override">{{tcOverrideHtml_8_6}}</div>
+          <div class="tc-original">
+            <p>The acceptance is also regarded as having been effected if, for grounds for which we are not responsible,
+              the acceptance run has not taken place within the period specified in paragraph 8.1 of this section or if
+              the Client goes into production with the use of the grinding mill.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_8_7}}
+      <div class="term-row">
+        <div class="term-no">8.7</div>
+        <div class="term-text {{tcOverrideClass_8_7}}">
+          <div class="tc-override">{{tcOverrideHtml_8_7}}</div>
+          <div class="tc-original">
+            <p>The Client will provide specialist trained personnel and factory laboratory items of equipment for
+              conduct
+              of the necessary analysis in respect of acceptance runs. Analysis must be swift and without delay in order
+              that the adjustment work on the system is not held up. For analysis, test methods and equipment
+              corresponding to the requirements of applicable standards (EN, ASTM etc.) must be made available. On our
+              request, the Client is to provide proof that the equipment is supervised and if applicable calibrated in
+              accordance with the stipulations of the standards documentation.</p>
+            <p>We are entitled to check the condition of items of equipment and their calibration by means of tests made
+              available to us and if necessary to require re-calibration, replacement of items of equipment or
+              procurement
+              of items of equipment appropriate to the relevant standards. Should the Customer not meet this
+              requirement,
+              we will provide equipment and specialist personnel appropriate to the acceptance runs. In this event,
+              costs
+              will be borne by the Client.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_9}}
+      <h3>9. Warranty</h3>
+      {{/if}}
+
+      {{#if showTC_9_1}}
+      <div class="term-row">
+        <div class="term-no">9.1</div>
+        <div class="term-text {{tcOverrideClass_9_1}}">
+          <div class="tc-override">{{tcOverrideHtml_9_1}}</div>
+          <div class="tc-original">
+            <p>If defects in respect of our assembly work emerge after acceptance, the Client shall immediately notify
+              us
+              thereof in writing. We shall be entitled and obliged to remedy the defect. The Client shall give us the
+              time
+              and opportunity necessary for determining and remedying the defect. The Client shall have the right to
+              remedy the defect itself or to have the defect remedied by a third party and to demand from us the
+              reimbursement of essential costs incurred only in urgent cases for maintaining operating safety or for
+              averting a disproportionally large degree of damage (whereby we shall be notified immediately) or if we
+              are
+              default in remedying the defect.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_9_2}}
+      <div class="term-row">
+        <div class="term-no">9.2</div>
+        <div class="term-text {{tcOverrideClass_9_2}}">
+          <div class="tc-override">{{tcOverrideHtml_9_2}}</div>
+          <div class="tc-original">
+            <p>If we do not comply with the obligation to repair and the Client sets a reasonable respite period, the
+              Client shall be entitled to reduce the agreed price after expiry of the period. The same shall apply if
+              two
+              attempts of repair have failed and further attempts are reasonably unacceptable to the Client, or if any
+              repair and delivery are impossible. Any other claims for damages and reimbursement of expenses shall exist
+              in accordance with the provisions laid down in sec. 10 only.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_9_3}}
+      <div class="term-row">
+        <div class="term-no">9.3</div>
+        <div class="term-text {{tcOverrideClass_9_3}}">
+          <div class="tc-override">{{tcOverrideHtml_9_3}}</div>
+          <div class="tc-original">
+            <p>Our warranty shall not apply to natural wear and tear, and furthermore not to damage of any kind which
+              has
+              occurred after acceptance and has not been caused by our fault, particularly on the following grounds:
+              unsuitable or unprofessional use, faulty fitting or maintenance by the Client or a third party, faulty or
+              negligent handling, unsuitable operating materials, replacement parts, faulty construction work,
+              unsuitable
+              foundation, chemical or electrical influences which are not provided for in accordance with the contract.
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_9_4}}
+      <div class="term-row">
+        <div class="term-no">9.4</div>
+        <div class="term-text {{tcOverrideClass_9_4}}">
+          <div class="tc-override">{{tcOverrideHtml_9_4}}</div>
+          <div class="tc-original">
+            <p>Warranty claims shall become barred after the expiry of 5 years from acceptance with regard to buildings,
+              otherwise after the expiry of 12 months from acceptance. The period will be extended in accordance with
+              the
+              remedy work.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_9_5}}
+      <div class="term-row">
+        <div class="term-no">9.5</div>
+        <div class="term-text {{tcOverrideClass_9_5}}">
+          <div class="tc-override">{{tcOverrideHtml_9_5}}</div>
+          <div class="tc-original">
+            <p>In case of malicious concealment of a defect or the assumption of an express warranty of certain
+              characteristics of the goods any claims of the Client shall exclusively be subject to the statutory
+              provisions.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-9">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-9-content">
+      {{#if showTC_10}}
+      <h3 class="terms-section-title-long">10. Exclusion and Limitation of Liability</h3>
+      {{/if}}
+
+      {{#if showTC_10_1}}
+      <div class="term-row">
+        <div class="term-no">10.1</div>
+        <div class="term-text {{tcOverrideClass_10_1}}">
+          <div class="tc-override">{{tcOverrideHtml_10_1}}</div>
+          <div class="tc-original">
+            <p>For any claims for damages and reimbursements of expenses directed against us and based upon breach of
+              duty
+              on the grounds of negligence, irrespective of the legal basis, we may be held liable in case of slight
+              negligence only if major contractual duties are violated and, thus, the purpose of the contract is
+              endangered. Otherwise, our liability for slight negligence shall be excluded.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_2}}
+      <div class="term-row">
+        <div class="term-no">10.2</div>
+        <div class="term-text {{tcOverrideClass_10_2}}">
+          <div class="tc-override">{{tcOverrideHtml_10_2}}</div>
+          <div class="tc-original">
+            <p>In the event of liability under Sec. 10.1 hereof and strict liability, we shall be liable for the typical
+              and foreseeable damage only. Claims for vain expenses by the Client are excluded.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_3}}
+      <div class="term-row">
+        <div class="term-no">10.3</div>
+        <div class="term-text {{tcOverrideClass_10_3}}">
+          <div class="tc-override">{{tcOverrideHtml_10_3}}</div>
+          <div class="tc-original">
+            <p>For damages based upon delay we shall be liable in case of slight negligence only up to 5% of the net
+              price
+              of the delivery of the machine.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_4}}
+      <div class="term-row">
+        <div class="term-no">10.4</div>
+        <div class="term-text {{tcOverrideClass_10_4}}">
+          <div class="tc-override">{{tcOverrideHtml_10_4}}</div>
+          <div class="tc-original">
+            <p>The Client shall decide on the use of the goods supplied or other services rendered by us in his own
+              responsibility. Unless we have confirmed in writing specific properties and suitabilities of the delivered
+              good for a purpose stipulated by contract, any advice concerning the technical application shall not be
+              binding in any case. We shall also be liable pursuant to Sec. 10.1 for any advice given or not given.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_5}}
+      <div class="term-row">
+        <div class="term-no">10.5</div>
+        <div class="term-text {{tcOverrideClass_10_5}}">
+          <div class="tc-override">{{tcOverrideHtml_10_5}}</div>
+          <div class="tc-original">
+            <p>The exclusion of liability under Secs. 10.1 to 10.4 shall also apply to the same extent with respect to
+              our
+              management, legal representatives, executives and non-executives, employees and other agents.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_6}}
+      <div class="term-row">
+        <div class="term-no">10.6</div>
+        <div class="term-text {{tcOverrideClass_10_6}}">
+          <div class="tc-override">{{tcOverrideHtml_10_6}}</div>
+          <div class="tc-original">
+            <p>The provisions laid down in Sec. 10.1 to 10.5 shall not be applicable if we are held liable under the
+              Product Liability Act, if we are held liable for the injury of life, body or health, in case of an express
+              warranty of certain characteristics or in case of a malicious concealment of a defect.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_7}}
+      <div class="term-row">
+        <div class="term-no">10.7</div>
+        <div class="term-text {{tcOverrideClass_10_7}}">
+          <div class="tc-override">{{tcOverrideHtml_10_7}}</div>
+          <div class="tc-original">
+            <p>We shall fundamentally not be liable, if the Client continues operating the plant despite the fact that
+              we
+              have (due to defects detected) given a written instruction not to operate the grinding mill until the
+              defects have been remedied or to only operate the grinding mill at reduced capacity up until then.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_8}}
+      <div class="term-row">
+        <div class="term-no">10.8</div>
+        <div class="term-text {{tcOverrideClass_10_8}}">
+          <div class="tc-override">{{tcOverrideHtml_10_8}}</div>
+          <div class="tc-original">
+            <p>For additional work that our staff executes according to the Client&#x27;s request and which is not
+              included in the original services, we are only liable if we have explicitly confirmed the takeover of
+              these
+              works.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_10_9}}
+      <div class="term-row">
+        <div class="term-no">10.9</div>
+        <div class="term-text {{tcOverrideClass_10_9}}">
+          <div class="tc-override">{{tcOverrideHtml_10_9}}</div>
+          <div class="tc-original">
+            <p>All claims for damages and reimbursement of expenses against us are barred within 12 months following the
+              delivery of the goods, in the case of a tort liability following the knowledge or grossly negligent
+              ignorance of the circumstances which justify the claim or of the person liable. This does not apply to in
+              case of wilful conduct and in cases pursuant of Sec. 10.6.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-10">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-10-content">
+      {{#if showTC_11}}
+      <h3 class="terms-section-title-long">11. Assembly and Installation of Third-party Part</h3>
+      {{/if}}
+
+      {{#if showTC_11_1}}
+      <div class="term-row">
+        <div class="term-no">11.1</div>
+        <div class="term-text {{tcOverrideClass_11_1}}">
+          <div class="tc-override">{{tcOverrideHtml_11_1}}</div>
+          <div class="tc-original">
+            <p>Our assembly staff may only assemble and install third-party parts (i.e. parts not supplied by us) with
+              our
+              express written approval. We accept no responsibility whatsoever for the proper functioning of these
+              parts.
+              Third-party parts shall be assembled and installed to the best of our assembly staff&#x27;s knowledge and
+              belief.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_11_2}}
+      <div class="term-row">
+        <div class="term-no">11.2</div>
+        <div class="term-text {{tcOverrideClass_11_2}}">
+          <div class="tc-override">{{tcOverrideHtml_11_2}}</div>
+          <div class="tc-original">
+            <p>Unless otherwise expressly agreed in writing, we shall not effect assembly insurance. This shall be a
+              matter for the Client. Should the Client expressly insist that we effect assembly insurance, we shall
+              effect
+              such insurance with appropriate cover at the Client&#x27;s expense.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_11_3}}
+      <div class="term-row">
+        <div class="term-no">11.3</div>
+        <div class="term-text {{tcOverrideClass_11_3}}">
+          <div class="tc-override">{{tcOverrideHtml_11_3}}</div>
+          <div class="tc-original">
+            <p>Any taxes or other levies due in connection with the assembly work shall be chargeable solely to the
+              Client
+              or shall be immediately reimbursed to us, if they are imposed by the fiscal administration or any other
+              authority.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_12}}
+      <h3>12. Final Regulations</h3>
+      {{/if}}
+
+      {{#if showTC_12_1}}
+      <div class="term-row">
+        <div class="term-no">12.1</div>
+        <div class="term-text {{tcOverrideClass_12_1}}">
+          <div class="tc-override">{{tcOverrideHtml_12_1}}</div>
+          <div class="tc-original">
+            <p>All legal relations between the Customer and us shall be exclusively governed by the laws of Indonesia.
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_12_2}}
+      <div class="term-row">
+        <div class="term-no">12.2</div>
+        <div class="term-text {{tcOverrideClass_12_2}}">
+          <div class="tc-override">{{tcOverrideHtml_12_2}}</div>
+          <div class="tc-original">
+            <strong>Mutual Discussion</strong><br />
+            The Parties agree that if any dispute arises out of or in connection with this Services Agreement, including
+            without limitation any question regarding its existence, validity, termination of rights or obligations of
+            any
+            Party, the Parties will attempt, for a period of 30 Days after the receipt by one Party of a notice from the
+            other Party of the existence of the dispute, to settle such dispute in the first instance by mutual
+            discussions between the Parties.
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_12_3}}
+      <div class="term-row">
+        <div class="term-no">12.3</div>
+        <div class="term-text {{tcOverrideClass_12_3}}">
+          <div class="tc-override">{{tcOverrideHtml_12_3}}</div>
+          <div class="tc-original">
+            <strong>Referral to Arbitration</strong><br />
+            Any dispute that cannot be settled amicably by mutual discussion within the 30 Days period referred to in
+            Sec.
+            7.3, will be settled by Badan Arbitrase Nasional Indonesia (“BANI”), to be conducted in the English
+            language,
+            in accordance with the rules of the BANI in force at the date of this Services Agreement (“Rules”).
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_12_4}}
+      <div class="term-row">
+        <div class="term-no">12.4</div>
+        <div class="term-text {{tcOverrideClass_12_4}}">
+          <div class="tc-override">{{tcOverrideHtml_12_4}}</div>
+          <div class="tc-original">
+            <strong>Venue and Appointment of Arbitrators</strong><br />
+            The arbitration will be conducted in Jakarta at the facilities of BANI by three arbitrators. Each Party may
+            appoint one arbitrators, and the third arbitrators, who shall be the Chairman of the tribunal, shall be
+            appointed by the two other arbitrators within 4 Weeks after their appointment, failing which the Chairman of
+            the tribunal shall be appointed by the BANI. Any notice of arbitration, response or other communication
+            given
+            to or by a Party to the arbitration will be given and deemed received as provided in the Rules. The costs of
+            the arbitration will be determined and paid by the Parties to the arbitration as provided in the Rules.
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="page terms-page terms-source-page terms-page-11">
+    <div class="doc-header">
+      <img src="{{headerBase64}}" alt="Loesche Logo" />
+    </div>
+
+    <div class="terms-content terms-page-11-content">
+      {{#if showTC_13}}
+      <h3>13. Rates Charged of PT Loesche Indonesia</h3>
+      {{/if}}
+
+      {{#if showTC_13}}
+      <div class="rates-validity">(Valid for the year 2026)</div>
+      {{/if}}
+
+      {{#if showTC_13_1}}
+      <div class="term-row">
+        <div class="term-no">13.1</div>
+        <div class="term-text {{tcOverrideClass_13_1}}">
+          <div class="tc-override">{{tcOverrideHtml_13_1}}</div>
+          <div class="tc-original">
+            <p>For overtime work the following additional rates will be charged on top of the hourly rates:</p>
+            <table class="overtime-rate-table">
+              <tr>
+                <td class="rate-percent">25%</td>
+                <td>for work at night, if not performed as overtime work</td>
+              </tr>
+              <tr>
+                <td class="rate-percent">25%</td>
+                <td>for the first 2 hours of daily overtime work performed on workdays</td>
+              </tr>
+              <tr>
+                <td class="rate-percent">50%</td>
+                <td>for the 3rd and following hours of daily overtime work performed on workdays</td>
+              </tr>
+              <tr>
+                <td class="rate-percent">50%</td>
+                <td>for work at night, so far performed as overtime work</td>
+              </tr>
+              <tr>
+                <td class="rate-percent">70%</td>
+                <td>for work performed on Sundays</td>
+              </tr>
+              <tr>
+                <td class="rate-percent">100%</td>
+                <td>for work performed on any other legal holiday in Indonesia</td>
+              </tr>
+              <tr>
+                <td class="rate-percent">150%</td>
+                <td>for work performed on Islamic New Year’s Day, Idul Fitri and Eid-al-Adha holidays</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if showTC_13_2}}
+      <div class="term-row">
+        <div class="term-no">13.2</div>
+        <div class="term-text {{tcOverrideClass_13_2}}">
+          <div class="tc-override">{{tcOverrideHtml_13_2}}</div>
+          <div class="tc-original">
+            <strong>Lodging and Travelling Expenses, Special Cost</strong><br />
+            <p>Lodging expenses, including lodging expenses during potential quarantine, will be charged as per the
+              original bills paid.</p>
+            <p>If accommodation is provided by the Client, it must satisfy the standards usual in Western Europe as
+              specified in sub clause 5.2 j.</p>
+            <p>Travelling expenses and all incidental expenses occurring in this connection ex Düsseldorf or the
+              respective domicile of the personnel, will be charged as per the original bills paid.</p>
+            <p>For the duration of erection and start-up of the plant, a vehicle (car supplied by Client, rental car,
+              taxi) should be provided for the LOESCHE personnel free of charge at any time. If the LOESCHE personnel
+              travel to their destination with private vehicles, the transport costs incurred will be charged in the
+              amount of € 0,60/km.After a six (6) months stay of our personnel at the erection site, the Client will
+              bear
+              the expenses of a return passage for our personnel, provided that the total time of stay will amount to a
+              minimum of (eight) 8 months. If the period of erection and commissioning includes the time of Christmas,
+              the
+              LOESCHE personnel will be entitled to a passage on Christmas. Those expenses will also be charged to the
+              Client. Dec. 20th will be the last workday of the respective year.
+            </p>
+            <p>Special costs for necessary medical examinations, vaccinations, also in case of pandemics and/or
+              epidemics,
+              insurance costs and other special expenses (i.e. excess baggage, communication costs) will be charged
+              at cost to the customer.Any taxes for LOESCHE Field Personnel whatever, social insurance, contribution or
+              other levies due to the local authorities in the Client&#x27;s country, will be borne by the customer.</p>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+    <img class="terms-final-footer-logo" src="{{footerBase64}}" alt="Loesche Footer Logo" />
+  </section>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const SOURCE_PAGE_SELECTOR = ".terms-source-page";
+      const SOURCE_CONTENT_SELECTOR = ".terms-source-page .terms-content";
+      const START_PAGE_NUMBER = 4;
+      const HEIGHT_TOLERANCE_PX = 1;
+
+      function createPage(container, headerSrc) {
+        const page = document.createElement("section");
+        page.className = "page terms-page dynamic-terms-page";
+
+        page.innerHTML = `
+          <div class="doc-header">
+            <img src="${headerSrc}" alt="Loesche Logo" />
+          </div>
+          <div class="terms-content dynamic-terms-content is-measuring"></div>
+          <div class="hr-bottom"></div>
+          <div class="copyright-bottom">PT Loesche Indonesia</div>
+          <div class="page-no-bottom"></div>
+        `;
+
+        container.appendChild(page);
+
+        return {
+          page,
+          content: page.querySelector(".dynamic-terms-content"),
+        };
+      }
+
+      function isOverflowing(content) {
+        return content.scrollHeight > content.clientHeight + HEIGHT_TOLERANCE_PX;
+      }
+
+      function isHeading(element) {
+        return element.matches("h3, .terms-main-title, .rates-validity");
+      }
+
+      function takeTrailingHeadingGroup(content) {
+        const result = [];
+
+        while (content.lastElementChild && isHeading(content.lastElementChild)) {
+          const heading = content.lastElementChild;
+          heading.remove();
+          result.unshift(heading);
+        }
+
+        return result;
+      }
+
+      function fitOversizedBlock(block, content) {
+        const fontSizes = ["9.35pt", "9.05pt", "8.75pt", "8.5pt"];
+        const lineHeights = ["1.12", "1.1", "1.08", "1.06"];
+
+        for (let index = 0; index < fontSizes.length; index += 1) {
+          block.style.fontSize = fontSizes[index];
+          block.style.lineHeight = lineHeights[index];
+
+          if (!isOverflowing(content)) {
+            return;
+          }
+        }
+
+        /* Pengaman terakhir: isi tidak dipotong walaupun satu klausul sangat panjang. */
+        content.style.overflow = "visible";
+      }
+
+      function appendBlock(block, state) {
+        state.current.content.appendChild(block);
+
+        if (!isOverflowing(state.current.content)) {
+          return;
+        }
+
+        block.remove();
+
+        /* Judul section tidak boleh tertinggal sendirian di bawah halaman. */
+        const headingsToMove = takeTrailingHeadingGroup(state.current.content);
+
+        if (state.current.content.children.length > 0) {
+          state.current = createPage(state.container, state.headerSrc);
+        }
+
+        headingsToMove.forEach((heading) => {
+          state.current.content.appendChild(heading);
+        });
+
+        state.current.content.appendChild(block);
+
+        /* Umumnya satu term-row muat satu halaman. Jika tidak, font diperkecil otomatis. */
+        if (isOverflowing(state.current.content)) {
+          fitOversizedBlock(block, state.current.content);
+        }
+      }
+
+      function removeEmptyPages(container) {
+        container.querySelectorAll(".dynamic-terms-page").forEach((page) => {
+          const content = page.querySelector(".dynamic-terms-content");
+
+          if (!content || content.children.length === 0) {
+            page.remove();
+          }
+        });
+      }
+
+      function paginateTerms() {
+        const sourcePages = Array.from(
+          document.querySelectorAll(SOURCE_PAGE_SELECTOR)
+        );
+        const sourceContents = Array.from(
+          document.querySelectorAll(SOURCE_CONTENT_SELECTOR)
+        );
+
+        if (!sourcePages.length || !sourceContents.length) {
+          return;
+        }
+
+        const blocks = [];
+
+        sourceContents.forEach((content) => {
+          Array.from(content.children).forEach((child) => {
+            blocks.push(child.cloneNode(true));
+          });
+        });
+
+        /* Semua T&C tidak dicentang: jangan menghasilkan halaman kosong. */
+        if (!blocks.length) {
+          sourcePages.forEach((page) => page.remove());
+          return;
+        }
+
+        const firstSourcePage = sourcePages[0];
+        const sourceHeader = firstSourcePage.querySelector(".doc-header img");
+        const sourceFooterLogo = document.querySelector(
+          ".terms-source-page .terms-final-footer-logo"
+        );
+
+        const container = document.createElement("div");
+        container.id = "dynamic-terms-pages";
+        firstSourcePage.parentNode.insertBefore(container, firstSourcePage);
+
+        const state = {
+          container,
+          headerSrc: sourceHeader ? sourceHeader.src : "",
+          current: null,
+        };
+
+        state.current = createPage(container, state.headerSrc);
+        blocks.forEach((block) => appendBlock(block, state));
+
+        removeEmptyPages(container);
+
+        const generatedPages = Array.from(
+          container.querySelectorAll(".dynamic-terms-page")
+        );
+
+        generatedPages.forEach((page, index) => {
+          const content = page.querySelector(".dynamic-terms-content");
+          const pageNumber = page.querySelector(".page-no-bottom");
+
+          content?.classList.remove("is-measuring");
+
+          if (pageNumber) {
+            pageNumber.textContent = String(START_PAGE_NUMBER + index);
+          }
+        });
+
+        /* Logo footer hanya tampil pada halaman T&C terakhir. */
+        const lastGeneratedPage = generatedPages.at(-1);
+
+        if (lastGeneratedPage && sourceFooterLogo) {
+          const footerLogo = sourceFooterLogo.cloneNode(true);
+          footerLogo.className = "terms-final-footer-logo";
+          lastGeneratedPage.appendChild(footerLogo);
+        }
+
+        sourcePages.forEach((page) => page.remove());
+        document.body.classList.add("terms-pagination-ready");
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", paginateTerms, {
+          once: true,
+        });
+      } else {
+        paginateTerms();
+      }
+    })();
+  </script>
+
+
+
+</body>
+
+</html>

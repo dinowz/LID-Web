@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quotation Template - DOCX Like</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 15mm 25mm 15mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #000000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.22;
+    }
+
+    .page {
+      width: 184mm;
+      min-height: 269mm;
+      margin: 0 auto;
+      background: #ffffff;
+    }
+
+    .print-page {
+      page-break-after: always;
+    }
+
+    .print-page:last-child {
+      page-break-after: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    td,
+    th {
+      vertical-align: top;
+      padding: 0;
+      font-weight: normal;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .preline {
+      white-space: pre-line;
+    }
+
+    .small {
+      font-size: 9.6px;
+    }
+
+    .tiny {
+      font-size: 8.8px;
+    }
+
+    .mt-2 {
+      margin-top: 2mm;
+    }
+
+    .mt-3 {
+      margin-top: 3mm;
+    }
+
+    .mt-4 {
+      margin-top: 4mm;
+    }
+
+    .mt-5 {
+      margin-top: 5mm;
+    }
+
+    .mt-6 {
+      margin-top: 6mm;
+    }
+
+    .mt-8 {
+      margin-top: 8mm;
+    }
+
+    .mb-2 {
+      margin-bottom: 2mm;
+    }
+
+    .mb-3 {
+      margin-bottom: 3mm;
+    }
+
+    .mb-4 {
+      margin-bottom: 4mm;
+    }
+
+    .mb-5 {
+      margin-bottom: 5mm;
+    }
+
+    .indent {
+      padding-left: 24mm;
+    }
+
+    .rule {
+      border-top: 1px solid #000;
+      height: 1px;
+      margin: 0 0 1.8mm 0;
+    }
+
+    .header-table td {
+      height: 35mm;
+    }
+
+    .header-left {
+      width: 52%;
+      padding-top: 2mm;
+    }
+
+    .header-right {
+      width: 48%;
+      text-align: right;
+      font-size: 8.8px;
+      padding-top: 1mm;
+    }
+
+    .header-logo[src="{{'../../assets/logo.png' }}"],
+    .signature-img[src="{{signatureImageUrl}}"],
+    .header-logo[src=""],
+    .signature-img[src=""] {
+      display: none;
+    }
+
+    .header-logo {
+      max-width: 38mm;
+      max-height: 13mm;
+      display: block;
+      margin-left: auto;
+      margin-bottom: 2mm;
+      object-fit: contain;
+    }
+
+    .footer-logo {
+      max-width: 142mm;
+      max-height: 44mm;
+      display: block;
+      margin-left: auto;
+      margin-bottom: 2mm;
+      object-fit: contain;
+    }
+
+    .main-title-table td {
+      padding-top: 0.8mm;
+      padding-bottom: 1.2mm;
+    }
+
+    .main-title-left {
+      width: 55%;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .main-title-right {
+      width: 45%;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      letter-spacing: 0.2px;
+    }
+
+    .info-table td {
+      padding: 0.45mm 1.5mm 0.45mm 0;
+      line-height: 1.15;
+    }
+
+    .info-table .label-left {
+      width: 27%;
+      font-weight: 700;
+    }
+
+    .info-table .value-left {
+      width: 33%;
+    }
+
+    .info-table .label-right {
+      width: 13%;
+      font-weight: 700;
+    }
+
+    .info-table .value-right {
+      width: 27%;
+    }
+
+    .address-table {
+      margin-top: 5mm;
+    }
+
+    .address-table td {
+      width: 50%;
+      line-height: 1.28;
+    }
+
+    .address-left {
+      padding-left: 18mm;
+      min-height: 27mm;
+    }
+
+    .address-right {
+      padding-left: 13mm;
+      min-height: 27mm;
+    }
+
+    /* Header quotation box layout like target image */
+    .customer-quotation-wrap {
+      display: grid;
+      grid-template-columns: 42% 52%;
+      column-gap: 6%;
+      align-items: start;
+      margin-bottom: 15mm;
+    }
+
+    .customer-block {
+      font-size: 15.5px;
+      line-height: 1.45;
+      padding-left: 1mm;
+    }
+
+    .customer-name {
+      display: inline-block;
+      padding: 0 1mm;
+      margin-bottom: 2mm;
+    }
+
+    .ship-title,
+    .hl {
+      display: inline;
+      padding: 0 1mm;
+    }
+
+    .ship-section {
+      margin-top: 26mm;
+    }
+
+    .ship-additional-info {
+      margin-top: 2mm;
+      padding: 0 1mm;
+      font-size: 13px;
+      line-height: 1.3;
+      white-space: pre-line;
+    }
+
+    .quotation-box {
+      border: 1.4px solid #000;
+      padding: 4mm 4mm 4.5mm 4mm;
+      min-height: 87mm;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .quotation-box-title {
+      font-size: 27px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 5mm;
+    }
+
+    .quotation-box table td {
+      padding: 0.7mm 1mm 0.7mm 0;
+      vertical-align: top;
+    }
+
+    .quotation-box .q-label {
+      font-size: 11px;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .quotation-box .q-value {
+      font-size: 15px;
+      line-height: 1.15;
+    }
+
+    .quotation-box .q-value.small-value {
+      font-size: 13px;
+    }
+
+    .quotation-box .q-hi {
+      font-weight: 700;
+      padding: 0 1mm;
+      display: inline-block;
+    }
+
+    .quotation-box a {
+      color: #0000ee;
+      text-decoration: underline;
+    }
+
+    .terms-table.box-layout-terms {
+      margin-top: 0;
+      font-size: 15px;
+    }
+
+    .terms-table.box-layout-terms td {
+      padding: 0.7mm 1.5mm 0.7mm 0;
+      line-height: 1.25;
+    }
+
+    .terms-table.box-layout-terms .terms-label {
+      width: 24%;
+      font-size: 13px;
+    }
+
+    .terms-table.box-layout-terms .terms-value {
+      width: 76%;
+      white-space: pre-line;
+    }
+
+    .terms-table.box-layout-terms .yellow-label {
+      font-weight: 400;
+      padding: 0 0.8mm;
+      display: inline-block;
+    }
+
+    .salutation.box-layout-salutation {
+      margin-top: 9mm;
+      font-size: 15px;
+    }
+
+    .opening-text {
+      font-size: 15px;
+      line-height: 1.3;
+      margin-bottom: 3mm;
+    }
+
+    .terms-table td {
+      padding: 0.6mm 1.5mm 0.6mm 0;
+      line-height: 1.18;
+    }
+
+    .terms-label {
+      width: 24%;
+      font-weight: 700;
+    }
+
+    .terms-value {
+      width: 76%;
+    }
+
+    .salutation {
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+    }
+
+    .item-table {
+      margin-top: 3mm;
+      font-size: 13px;
+      border-collapse: collapse;
+    }
+
+    .item-table th {
+      padding: 1.3mm 1.8mm;
+      line-height: 1.18;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .item-table td {
+      padding: 2.5mm 1.8mm;
+      line-height: 1.18;
+      vertical-align: top;
+    }
+
+    .item-table thead th {
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+      font-weight: 700;
+    }
+
+    .item-table .pos {
+      width: 7%;
+    }
+
+    .item-table .qty {
+      width: 12%;
+    }
+
+    .item-table .mat {
+      width: 18%;
+    }
+
+    .item-table .desc {
+      width: 38%;
+    }
+
+    .item-table .price {
+      width: 13%;
+      text-align: right;
+    }
+
+    .item-table .net {
+      width: 12%;
+      text-align: right;
+    }
+
+    .desc-block {
+      line-height: 1.22;
+      vertical-align: top;
+    }
+
+    .desc-block div {
+      margin: 0;
+      padding: 0;
+    }
+
+    .desc-title {
+      font-weight: 700;
+      white-space: pre-line;
+    }
+
+    .desc-note {
+      font-style: italic;
+      color: #444;
+      margin-top: 0.5mm !important;
+      white-space: pre-line;
+    }
+
+    .section-divider td {
+      border-top: 1px solid #000;
+      padding-top: 2mm;
+    }
+
+    .spacer-row td {
+      height: 5mm;
+    }
+
+    .spacer-row-small td {
+      height: 3mm;
+    }
+
+    .total-table {
+      margin-top: 5mm;
+      font-size: 13px;
+      width: 100%;
+      border-top: 1px solid #000;
+      padding-top: 2mm;
+    }
+
+    .total-table td {
+      padding: 0.8mm 0;
+    }
+
+    .total-label {
+      width: 73%;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .total-currency {
+      width: 12%;
+      text-align: right;
+      font-weight: 700;
+      padding-right: 4mm !important;
+    }
+
+    .total-value {
+      width: 15%;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .price-note {
+      margin-top: 12mm;
+      font-size: 9.7px;
+    }
+
+    .conditions-title {
+      margin-top: 9mm;
+      margin-bottom: 5mm;
+      font-weight: 700;
+      page-break-before: always;
+      break-before: page;
+    }
+
+    .condition {
+      margin-bottom: 3.5mm;
+      page-break-inside: avoid;
+    }
+
+    .condition-table td {
+      line-height: 1.24;
+    }
+
+    .condition-no {
+      width: 8mm;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .condition-body {
+      width: auto;
+    }
+
+    .condition-head {
+      font-weight: 700;
+      margin-bottom: 1.2mm;
+    }
+
+    .payment-lines {
+      margin-left: 11mm;
+      white-space: normal;
+    }
+
+    .payment-lines div {
+      margin: 0;
+      padding: 0;
+      line-height: 1.25;
+    }
+
+
+    .footer-sign {
+      margin-top: 8mm;
+      page-break-inside: avoid;
+    }
+
+    .signature-img {
+      display: block;
+      width: 36mm;
+      height: 16mm;
+      object-fit: contain;
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+    }
+
+    .company-name-spaced {
+      font-weight: 700;
+      letter-spacing: 3.1px;
+      margin-bottom: 3mm;
+    }
+
+    .footer-company {
+      font-size: 9.5px;
+      line-height: 1.2;
+    }
+
+    .footer-company td:first-child {
+      width: 17mm;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    .row-left-upset {
+      position: relative;
+      left: -80px;
+    }
+
+    .footer-company {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .footer-company-name {
+      font-weight: bold;
+      font-size: medium;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+    .footer-logo-cell {
+      vertical-align: top;
+    }
+
+    .footer-logo {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media screen {
+      body {
+        background: #e9e9e9;
+        padding: 12px 0;
+      }
+
+      .page {
+        padding: 14mm 13mm 13mm 13mm;
+        width: 210mm;
+        min-height: 297mm;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.18);
+      }
+    }
+
+    @media print {
+      .page {
+        width: auto;
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="print-page">
+      <table class="header-table">
+        <tr>
+          <td class="header-left">
+            <div class="bold">OUR OFFER NO./DATE</div>
+            <div>{{quotationNumber}} / {{quotationDateFormatted}}</div>
+            <div>{{location}} / {{projectNo}}</div>
+            <br />
+            <div class="bold">{{endCustomerName}}</div>
+          </td>
+          <td class="header-right">
+            <img class="header-logo" src="{{logoBase64}}" alt="Company Logo" />
+            <div>PT Loesche Indonesia, Wisma Metropolitan 1, WTC 5. 7th floor, Jl Jend Sudirman Kav.29 Jakarta 12920
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="rule"></div>
+
+      <div class="customer-quotation-wrap">
+        <div class="customer-block">
+          <div><span class="customer-name">{{customerName}}</span></div>
+          <div class="preline">{{customerAddress}}</div>
+
+          <div class="ship-section">
+            <div><span class="ship-title bold">SHIP-TO-PARTY:</span></div>
+            <br />
+            <div><span class="hl">{{endCustomerName}}</span></div>
+            {{#if additionalInformation}}
+            <div class="ship-additional-info">
+              {{additionalInformation}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="quotation-box">
+          <div class="quotation-box-title">QUOTATION</div>
+          <table>
+            <tr>
+              <td class="q-label" style="width:58%;">Quotation no./location/project-no.</td>
+              <td class="q-label" style="width:42%;">Date</td>
+            </tr>
+            <tr>
+              <td class="q-value"><span class="q-hi">{{quotationNumber}} {{location}} / {{projectNo}}</span></td>
+              <td class="q-value"><span class="q-hi">{{quotationDateFormatted}}</span></td>
+            </tr>
+            <tr>
+              <td class="q-label">Concerned is (Please mention this in all correspond)</td>
+              <td class="q-label">Tel no.</td>
+            </tr>
+            <tr>
+              <td class="q-value">Hendra Tjhai</td>
+              <td class="q-value row-left-upset">+62 21 5712232 ext 103</td>
+            </tr>
+            <tr>
+              <td class="q-label">Our Fax-no.</td>
+              <td class="q-label row-left-upset">Mail</td>
+            </tr>
+            <tr>
+              <td class="q-value">+62 21 5712266</td>
+              <td class="q-value small-value row-left-upset"><a
+                  href="mailto:Hendra.Tjhai@loesche.com">Hendra.Tjhai@loesche.com</a></td>
+            </tr>
+            <tr>
+              <td class="q-label">Your client no.</td>
+              <td class="q-value small-value row-left-upset"><a
+                  href="mailto:sales.lind@loesche.com">sales.lind@loesche.com</a></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="height:7mm;"></td>
+            </tr>
+            <tr>
+              <td class="q-label">Inquiry no./Date</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="q-value" colspan="2"><span class="q-hi">{{customerInquiryNumber}} /
+                  {{inquiryDateFormatted}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="q-label">Validity period</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="q-value" colspan="2"><span class="q-hi">Until&nbsp;&nbsp;{{validityDateFormattedShort}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="q-label">Attention:</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="q-value" colspan="2">{{attentionTitle}}<span class="q-hi">{{attention}}</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <table class="terms-table box-layout-terms">
+        <tr>
+          <td class="terms-label"><span class="yellow-label">Delivery date:</span></td>
+          <td class="terms-value">{{deliveryDateDesc}}</td>
+        </tr>
+        <tr>
+          <td class="terms-label"><span class="yellow-label">Delivery Terms:</span></td>
+          <td class="terms-value">{{deliveryTerms}}</td>
+        </tr>
+        <tr>
+          <td class="terms-label"><span class="yellow-label">Payment:</span></td>
+          <td class="terms-value">{{paymentTerms}}</td>
+        </tr>
+      </table>
+
+      <div class="salutation box-layout-salutation">Dear Sirs/ Madam,</div>
+      <div class="opening-text">With reference to your above mentioned inquiry, we are pleased to quote you as follows:
+      </div>
+      <table class="item-table">
+        <thead>
+          <tr>
+            <th class="pos">Pos.</th>
+            <th class="qty">Qty/Unit</th>
+            <th class="mat">Mat-Nr</th>
+            <th class="desc">Description</th>
+            <th class="price">Price/Unit<br />{{currency}}</th>
+            <th class="net">Net value<br />{{currency}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each normalItems}}
+          <tr>
+            <td>{{this.pos}}</td>
+            <td>{{this.qtyStr}}</td>
+            <td>{{this.matNr}}</td>
+            <td class="desc-block">
+              <div class="desc-title">{{this.customerRequest}}</div>
+              <div class="desc-note">{{this.note}}</div>
+            </td>
+            <td class="price">{{this.unitPriceStr}}</td>
+            <td class="net">{{this.netValueStr}}</td>
+          </tr>
+          <tr class="spacer-row-small">
+            <td colspan="6"></td>
+          </tr>
+          {{/each}}
+          {{#if hasAlternatives}}
+          <tr class="spacer-row">
+            <td colspan="6"></td>
+          </tr>
+          <tr>
+            <td colspan="6" class="bold">Alternatives</td>
+          </tr>
+          {{#each alternativeItems}}
+          <tr>
+            <td>{{this.pos}}</td>
+            <td>{{this.qtyStr}}</td>
+            <td>{{this.matNr}}</td>
+            <td class="desc-block">
+              <div class="desc-title">{{this.description}}</div>
+              {{#if this.customerRequest}}
+              <div class="desc-title">{{this.customerRequest}}</div>
+              {{/if}}
+              <div class="desc-note">{{this.note}}</div>
+            </td>
+            <td class="price">{{this.unitPriceStr}}</td>
+            <td class="net">{{this.netValueStr}}</td>
+          </tr>
+          <tr class="spacer-row-small">
+            <td colspan="6"></td>
+          </tr>
+          {{/each}}
+          {{/if}}
+        </tbody>
+      </table>
+
+      <table class="total-table">
+        <tr>
+          <td class="total-label">Total Price (Exclude VAT)</td>
+          <td class="total-currency">{{currency}}</td>
+          <td class="total-value">{{subTotalStr}}</td>
+        </tr>
+        {{#if hasGlobalDiscount}}
+        <tr>
+          <td class="total-label" style="font-weight: normal;">Discount</td>
+          <td class="total-currency" style="font-weight: normal;">{{currency}}</td>
+          <td class="total-value" style="font-weight: normal; color: #000;">-{{discountAmountStr}}</td>
+        </tr>
+        <tr>
+          <td class="total-label" style="border-top: 1px solid #000; padding-top: 1.5mm;">Net Total Price (Exclude VAT)
+          </td>
+          <td class="total-currency" style="border-top: 1px solid #000; padding-top: 1.5mm;">{{currency}}</td>
+          <td class="total-value" style="border-top: 1px solid #000; padding-top: 1.5mm;">{{totalPriceStr}}</td>
+        </tr>
+        {{/if}}
+      </table>
+
+      <div class="price-note">*Price does not include VAT and subject to change in term of reduction of ordered quantity
+        and/ or item</div>
+
+      {{#if remarks}}
+      <div class="mt-6 avoid-break">
+        <div class="bold" style="font-size: 11px; margin-bottom: 2mm;">Additional Remarks:</div>
+        <div class="preline" style="font-size: 10px; line-height: 1.3; padding-left: 2mm;">{{remarks}}</div>
+      </div>
+      {{/if}}
+
+      <div class="conditions-title">Commercial Conditions:</div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">1</td>
+            <td class="condition-body">
+              <div class="condition-head">Validity</div>
+              <div>Our commercial offer is firm and binding until <span
+                  style="font-weight: bold;">{{validityDateFormatted}}.</span></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">2.</td>
+            <td class="condition-body">
+              <div class="condition-head">Coming into effect of the contract</div>
+              <div>The contract only becomes effective when we have confirmed the order in writing or when both parties
+                have signed a contract and Down Payment received by Seller.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">3.</td>
+            <td class="condition-body">
+              <div class="condition-head">INCOTERMS</div>
+              <div>Unless explicitly agreed otherwise, our deliveries are effected <span
+                  style="font-weight: bold;">{{deliveryTermsShort}}</span> accordance with
+                INCOTERMS 2010.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">4.</td>
+            <td class="condition-body">
+              <div class="condition-head">Prices</div>
+              <div>The prices in this offer are fixed within the stated validity period. If, after the coming into
+                effect of this contract, freight costs, insurance costs or official levies and charges (e.g. customs,
+                import and export duties) are newly introduced or raised then LOESCHE shall be entitled to add such
+                additional charges to the agreed price.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">5.</td>
+            <td class="condition-body">
+              <div class="condition-head">Tax</div>
+              <div>The above mentioned offer excludes VAT.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">6.</td>
+            <td class="condition-body">
+              <div class="condition-head">Payment Conditions</div>
+              <div class="payment-lines">
+                {{#if paymentConditions}}
+                <div>{{paymentConditions}}</div>
+                {{/if}}
+              </div>
+              <div class="mt-3">The Parties agree and acknowledge that the Contract Price is calculated on the basis of
+                the Offer Exchange Rate and that the Price shall be adjusted Accordingly to currency exchange
+                fluctuations (For fluctuation of more than + 2% or -2%). Therefore, the Price shall be adjusted
+                automatically if the actual Exchange Rate rises or falls compared to the Offer Exchange Rate when PT.
+                Loesche Indonesia filed the invoice for the Goods.</div>
+              <div class="mt-3">PT. Loesche Indonesia shall be entitled to receive on its bank account the amount of the
+                Contract Price multiplied by the Actual Exchange Rate and divided by the Offer Exchange Rate. For such
+                purpose, PT. Loesche Indonesia shall notify and be entitled to request for the amendment of Purchase
+                Order to accommodate the adjustment of the Contract Price, and as for such request, the Customer shall
+                be obliged to execute such amendment within the period of 2 weeks after the goods has been received.
+              </div>
+              <div class="mt-3">If the difference were arise caused by Actual Exchange Rate is higher than offer
+                Exchange Rate, then the difference shall be paid via T/T (Telegraphic Transfer) in 30 days after
+                receiving the original invoice and tax receipt from Loesche.</div>
+              <div class="mt-3">Payments can be made directly to: <span>{{bankDetails}}</span></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">7.</td>
+            <td class="condition-body">
+              <div class="condition-head">Delivery</div>
+              <div><span>{{deliveryDateDesc}}</span> order confirmation and settlement
+                of Down Payment if applicable as per Clause 6.
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">8.</td>
+            <td class="condition-body">
+              <div class="condition-head">Warranty Period</div>
+              <div>The warranty for the goods delivered is limited to a period of 12 months from delivery of storage of
+                the goods. Normal wear and tear, improper handling or use by Buyer’s or third
+                parties personnel are not subject to the warranty.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">9.</td>
+            <td class="condition-body">
+              <div class="condition-head">Export Control and Customs</div>
+              <div>This Offer is made subject to all necessary Export Licenses and the other permissions being obtained
+                by the recipient, from the relevant authorities, For the destination and intended use of the goods
+                and/or services.</div>
+              <div class="mt-3">The Customer’s purchase order/award of contract is subject to PT. Loesche Indonesia’s
+                order confirmation/acceptance (“Order Confirmation”).</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">10.</td>
+            <td class="condition-body">
+              <div class="condition-head">Force Majeure</div>
+              <div>PT. Loesche Indonesia shall not be liable for any delay or failure to meet its obligation under this
+                offer and subsequent contract, due to any cause beyond its reasonable control including but not limited
+                to Acts of God, war, riot, malicious act of damage, civil commotion, strike, lock-out, industrial
+                dispute, power failure or fire, disease, illness, epidemics, pandemics or other natural disasters.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">11.</td>
+            <td class="condition-body">
+              <div class="condition-head">Non-Cancellation</div>
+              <div>Buyer may not cancel or terminate for convenience, or direct suspension of manufacture, except with
+                Seller’s written consent and then only upon terms that will compensate Seller for its engineering,
+                fabrication and purchasing charges and other costs relating to such cancellation, termination or
+                suspension, plus reasonable amount for profit.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">12.</td>
+            <td class="condition-body">
+              <div class="condition-head">Limitation of Liability</div>
+              <div>The overall liability of PT Loesche Indonesia under or in connection with this offer and any
+                subsequent order shall in the aggregate be limited to max. 100% of the total order value.</div>
+              <div class="mt-3">PT Loesche Indonesia shall in no event be liable to the buyer by way of idemnity or by
+                reason of any breach of the contract, breach of statutory duty, or breach of any warranty or guarantee
+                or under any othe title, legal or contractual basis or theory of law for any loss or profit or
+                anticipated revenue, loss of production or use, loss of contract of orders, delay, loss of goodwill or
+                for any other economic or financial loss or for any indirect, incidental, special or consequential loss
+                or damage whatsoever and howsoever caused that may be suffered by the Buyer.</div>
+              <div class="mt-3">Any liability of PT Loesche Indonesia with respect to death or injury to any person is
+                subject to and governed by the provisions of the law applicable.</div>
+              <div class="mt-3">Any liability of PT Loesche Indonesia shall cease 6 months after the end of the
+                respective warranty period applicable for the part of deliveries due to which damage was caused.</div>
+              <div class="mt-3">The limitations and exclusions stated herein do, however, not apply to damages or loss
+                caused by intentional act on the part of PT Loesche Indonesia, excepts its subcontractors and any
+                personnel of same.</div>
+              <div class="mt-3">PT Loesche Indonesia shall not be liable if the Buyer continues to use and/or operate
+                the goods deliverd although owing to defects which have been ascertained PT Loesche Indonesia informed
+                the Buyer in writing that the goods must not be operated with reduced output, until these defects have
+                been cleared.</div>
+              <div class="mt-3">The Buyer shall be obliged to permit PT Loesche Indonesia and its representatives at any
+                time, on PT Loesche Indonesia’s request to inspect operating and maintenance logs.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">13.</td>
+            <td class="condition-body">
+              <div class="condition-head">Mutual Discussion</div>
+              <div>The Parties agree that if any dispute arises out of or in connection with this Services Agreement,
+                including without limitation any question regarding its existence, validity, termination of rights or
+                obligations of any Party, the Parties will attempt, for a period of 30 Days after the receipt by one
+                Party of a notice from the other Party of the existence of the dispute, to settle such dispute in the
+                first instance by mutual discussions between the Parties.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">14.</td>
+            <td class="condition-body">
+              <div class="condition-head">Referral to Abitration</div>
+              <div>Any dispute that cannot be settled amicably by mutual discussion within the 30 Days period referred
+                to in Clause 14, will be settled by Badan Arbitrase Nasional Indonesia (“BANI”), to be conducted in the
+                English language, in accordance with the rules of the BANI in force at the date of this Services
+                Agreement (“Rules”)</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">15.</td>
+            <td class="condition-body">
+              <div class="condition-head">Venue and Appointment of Arbitrators</div>
+              <div>The arbitration will be conducted in Jakarta at the facilities of BANI by three arbitrators. Each
+                Party may appoint one arbitrators, and the third arbitrators, who shall be the Chairman of the tribunal,
+                shall be appointedby the two other arbitrators within 4 Weeks after their appointment, failing which the
+                Chairman of the tribunal shall be appointed by the BANI. Any notice of arbitration, response or other
+                communication given to or by a Party to the arbitration will be given and deemed received as provided in
+                the Rules. The costs of the arbitration will be determined and paid by the Parties to the arbitration as
+                provided in the Rules</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="condition avoid-break">
+        <table class="condition-table">
+          <tr>
+            <td class="condition-no">16.</td>
+            <td class="condition-body">
+              <div class="condition-head">Miscellaneous</div>
+              <div>In the event that any provision (or part thereof) of this offer and/or the order based on it shall
+                prove to be invalid, illegal, void or unenforceable, such provision(s) shall deemed to be separable from
+                the other provisions of this offer and/or the respective order that shall remain binding</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="footer-sign">
+        <img class="signature-img" src="{{signatureImageUrl}}" alt="Signature" />
+
+        <table class="footer-company">
+          <tr>
+            <td rowspan="7" class="footer-company-name">
+              PT Loesche Indonesia
+            </td>
+            <td rowspan="2" class="footer-logo-cell">
+              <img class="footer-logo" src="{{footerBase64}}" alt="Company Logo" />
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

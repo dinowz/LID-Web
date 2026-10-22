@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Note Template</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #000;
+    }
+
+    .page {
+      position: relative;
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto 12px;
+      background: #ffffff;
+      overflow: hidden;
+      page-break-after: always;
+      padding: 4mm 5mm 6mm;
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1fr 82mm;
+      gap: 5mm;
+      align-items: start;
+      margin-bottom: 3mm;
+    }
+
+    .logo-wrap {
+      padding-left: 8px;
+      padding-top: 4px;
+    }
+
+    .logo {
+      color: #5ebd48;
+      font-weight: 700;
+      font-size: 38pt;
+      line-height: 0.9;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      font-size: 48pt !important;
+    }
+
+    .logo-sub {
+      margin-top: 6px;
+      color: #666;
+      font-size: 11px;
+      letter-spacing: 4px;
+    }
+
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5pt;
+      margin-top: 6px;
+    }
+
+    .meta-table td {
+      padding: 1mm 2mm;
+      vertical-align: middle;
+    }
+
+    .meta-table td.label {
+      width: 45%;
+      text-align: right;
+      padding-right: 16px;
+    }
+
+    .meta-table td.value {
+      width: 55%;
+      border: 1px solid #888;
+      background: #e9e9e9;
+      font-size: 20pt;
+      line-height: 1.1;
+      padding: 2mm 3mm;
+    }
+
+    .meta-table .value.small {
+      font-size: 10.8pt;
+      padding: 1mm 3mm;
+    }
+
+    .address-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16mm;
+      margin-top: 8px;
+      margin-bottom: 7mm;
+      padding: 0;
+    }
+
+    .section-title {
+      background: #b9ddb9;
+      color: #1b5220;
+      padding: 2px 18px 3px;
+      font-size: 15pt;
+      line-height: 1.15;
+      width: 62mm;
+      margin-bottom: 8px;
+    }
+
+    .address-box {
+      font-size: 10.5pt;
+      line-height: 1.85;
+      min-height: 36mm;
+    }
+
+    .items-table {
+      width: 100%;
+      margin: 0 0 4mm;
+      border-collapse: collapse;
+      font-size: 10.5pt;
+    }
+
+    .items-table th,
+    .items-table td {
+      border: 1px solid #8a8a8a;
+      padding: 3px 8px;
+      vertical-align: top;
+      background: #d9d9d9;
+    }
+
+    .items-table thead th {
+      background: #c7e6c7;
+      color: #1b5220;
+      font-weight: 400;
+      font-size: 10.8pt;
+    }
+
+    .items-table .col-item {
+      width: 18mm;
+      text-align: center;
+    }
+
+    .items-table .col-desc {
+      width: 84mm;
+    }
+
+    .items-table .col-small {
+      width: 25mm;
+      text-align: center;
+    }
+
+    .spacer-row td {
+      height: 5mm;
+      background:
+        linear-gradient(to right, #d9d9d9 0%, #d9d9d9 50%, #c8c8c8 50%, #c8c8c8 100%);
+      padding: 0;
+    }
+
+    .sign-area {
+      display: grid;
+      grid-template-columns: 52mm 1fr;
+      gap: 8mm;
+      padding: 0;
+      margin-top: 10px;
+      margin-bottom: 3mm;
+      min-height: 45mm;
+      font-size: 10.5pt;
+    }
+
+    .sign-left {
+      line-height: 2.8;
+    }
+
+    .sign-line {
+      border-bottom: 1px solid #000;
+      height: 12mm;
+      margin-bottom: 9mm;
+    }
+
+    .note {
+      padding: 0;
+      font-size: 13px;
+      margin: 4mm 0 5mm;
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7mm;
+      padding: 0;
+      font-size: 10.5pt;
+      line-height: 1.35;
+    }
+
+    .bottom h4 {
+      margin: 0 0 4px;
+      font-size: 10.5pt;
+      font-weight: 400;
+    }
+
+    .mono-ish {
+      white-space: pre-line;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="top">
+      <div class="logo-wrap">
+        <img src="{{logoBase64}}" alt="Loesche Logo" style="max-height: 80px; width: auto;" />
+      </div>
+
+      <table class="meta-table">
+        <tr>
+          <td class="label">Date</td>
+          <td class="value small">{{date}}</td>
+        </tr>
+        <tr>
+          <td class="label">Delivery Note #</td>
+          <td class="value small">{{deliveryNoteNumber}}</td>
+        </tr>
+        <tr>
+          <td class="label">Delivery Method</td>
+          <td class="value small">{{deliveryMethod}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="address-row">
+      <div>
+        <div class="section-title">Shipping Address</div>
+        <div class="address-box">{{shippingAddress}}</div>
+      </div>
+
+      <div>
+        <div class="section-title">Shipper Address</div>
+        <div class="address-box">
+          {{#if pic}}<strong>PIC:</strong> {{pic}}<br>{{/if}}
+          PT Loesche Indonesia<br>
+          Gedung Wisma Metropolitan I Lantai 7<br>
+          Jl. Jend. Sudirman kav. 29-31, karet Setiabudi<br>
+          Jakarta Selatan - 12920 Indonesia<br>
+          Telp: 021-5712232
+        </div>
+      </div>
+    </div>
+
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th class="col-item">Item #</th>
+          <th class="col-desc">Description</th>
+          <th class="col-small">Ordered</th>
+          <th class="col-small">Delivered</th>
+          <th class="col-small">Outstanding</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+        <tr>
+          <td class="col-item">{{@indexPlusOne}}</td>
+          <td>{{description}}</td>
+          <td class="col-small">{{ordered}}</td>
+          <td class="col-small">{{delivered}}</td>
+          <td class="col-small">{{outstanding}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="col-item"></td>
+          <td>
+            our reference number: {{sdDocument}}<br>
+            your reference number: {{clientPoNumber}}<br>
+            <span style="white-space: pre-line;">{{packingListDisplay}}</span>
+          </td>
+          <td class="col-small"></td>
+          <td class="col-small"></td>
+          <td class="col-small"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sign-area">
+      <div class="sign-left">
+        <div style="margin-bottom:10px;">RECEIVED BY</div>
+        <div style="line-height: 2.6;">Name</div>
+        <div style="line-height: 2.6;">Signature &amp; Company Stamp</div>
+      </div>
+      <div>
+        <div class="sign-line"></div>
+        <div class="sign-line"></div>
+      </div>
+    </div>
+
+    <div class="note">
+      Mohon dibantu untuk mengirimkan Surat Jalan yang sudah ditandatangani ke email: aditya.nugroho@loesche.com
+    </div>
+
+    {{#if logisticNote}}
+    <div class="note" style="margin-top: -10px; color: #555;">
+      <strong>Catatan Logistik:</strong><br>
+      {{logisticNote}}
+    </div>
+    {{/if}}
+
+    <div class="bottom">
+      <div class="mono-ish">
+        <h4>BENEFICIARY:</h4>
+        PT. LOESCHE INDONESIA
+        GD. WISMA METROPOLITAN I LT. 7
+        JL. JEND. SUDIRMAN KAV. 29-31
+        SETIABUDI JAKARTA SELATAN
+
+        <br>
+        <h4>APPLICANT:</h4>
+        {{applicantDetail}}
+      </div>
+
+      <div class="mono-ish">
+        <h4>Pengangkut:</h4>
+        {{forwarderDetail}}
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

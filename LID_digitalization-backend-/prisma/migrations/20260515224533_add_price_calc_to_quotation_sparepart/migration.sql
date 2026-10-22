@@ -1,0 +1,10 @@
+-- Add price calculation fields to quotation_sparepart
+ALTER TABLE "quotation_sparepart"
+  ADD COLUMN IF NOT EXISTS "vendor_source"   VARCHAR(10) DEFAULT 'LOG',
+  ADD COLUMN IF NOT EXISTS "handling_pct"    DECIMAL(8,4) NOT NULL DEFAULT 10,
+  ADD COLUMN IF NOT EXISTS "canon_pct"       DECIMAL(8,4) NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "commission_pct"  DECIMAL(8,4) NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "overhead_pct"    DECIMAL(8,4) NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "freight_pct"     DECIMAL(8,4) NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "custom_pct"      DECIMAL(8,4) NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "sell_price_calc" DECIMAL(18,2) NOT NULL DEFAULT 0;

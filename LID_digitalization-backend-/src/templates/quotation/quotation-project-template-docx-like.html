@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Quotation Template</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 15mm 25mm 15mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #000000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.22;
+    }
+
+    .page {
+      width: 184mm;
+      min-height: 269mm;
+      margin: 0 auto;
+      background: #ffffff;
+    }
+
+    .print-page {
+      page-break-after: always;
+    }
+
+    .print-page:last-child {
+      page-break-after: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    td,
+    th {
+      vertical-align: top;
+      padding: 0;
+      font-weight: normal;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .preline {
+      white-space: pre-line;
+    }
+
+    .small {
+      font-size: 9.6px;
+    }
+
+    .tiny {
+      font-size: 8.8px;
+    }
+
+    .mt-2 {
+      margin-top: 2mm;
+    }
+
+    .mt-3 {
+      margin-top: 3mm;
+    }
+
+    .mt-4 {
+      margin-top: 4mm;
+    }
+
+    .mt-5 {
+      margin-top: 5mm;
+    }
+
+    .mt-6 {
+      margin-top: 6mm;
+    }
+
+    .mt-8 {
+      margin-top: 8mm;
+    }
+
+    .mb-2 {
+      margin-bottom: 2mm;
+    }
+
+    .mb-3 {
+      margin-bottom: 3mm;
+    }
+
+    .mb-4 {
+      margin-bottom: 4mm;
+    }
+
+    .mb-5 {
+      margin-bottom: 5mm;
+    }
+
+    .indent {
+      padding-left: 24mm;
+    }
+
+    .rule {
+      border-top: 1px solid #000;
+      height: 1px;
+      margin: 0 0 1.8mm 0;
+    }
+
+    .header-table td {
+      height: 35mm;
+    }
+
+    .header-left {
+      width: 52%;
+      padding-top: 2mm;
+    }
+
+    .header-right {
+      width: 48%;
+      text-align: right;
+      font-size: 8.8px;
+      padding-top: 1mm;
+    }
+
+    .header-logo[src="{{'../../assets/logo.png' }}"],
+    .signature-img[src="{{signatureImageUrl}}"],
+    .header-logo[src=""],
+    .signature-img[src=""] {
+      display: none;
+    }
+
+    .header-logo {
+      max-width: 38mm;
+      max-height: 13mm;
+      display: block;
+      margin-left: auto;
+      margin-bottom: 2mm;
+      object-fit: contain;
+    }
+
+    .footer-logo {
+      max-width: 142mm;
+      max-height: 44mm;
+      display: block;
+      margin-left: auto;
+      margin-bottom: 2mm;
+      object-fit: contain;
+    }
+
+    .main-title-table td {
+      padding-top: 0.8mm;
+      padding-bottom: 1.2mm;
+    }
+
+    .main-title-left {
+      width: 55%;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .main-title-right {
+      width: 45%;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      letter-spacing: 0.2px;
+    }
+
+    .info-table td {
+      padding: 0.45mm 1.5mm 0.45mm 0;
+      line-height: 1.15;
+    }
+
+    .info-table .label-left {
+      width: 27%;
+      font-weight: 700;
+    }
+
+    .info-table .value-left {
+      width: 33%;
+    }
+
+    .info-table .label-right {
+      width: 13%;
+      font-weight: 700;
+    }
+
+    .info-table .value-right {
+      width: 27%;
+    }
+
+    .address-table {
+      margin-top: 5mm;
+    }
+
+    .address-table td {
+      width: 50%;
+      line-height: 1.28;
+    }
+
+    .address-left {
+      padding-left: 18mm;
+      min-height: 27mm;
+    }
+
+    .address-right {
+      padding-left: 13mm;
+      min-height: 27mm;
+    }
+
+    /* Header quotation box layout like target image */
+    .customer-quotation-wrap {
+      display: grid;
+      grid-template-columns: 42% 52%;
+      column-gap: 6%;
+      align-items: start;
+      margin-bottom: 15mm;
+    }
+
+    .customer-block {
+      font-size: 15.5px;
+      line-height: 1.45;
+      padding-left: 1mm;
+    }
+
+    .customer-name {
+      display: inline-block;
+      padding: 0 1mm;
+      margin-bottom: 2mm;
+    }
+
+    .ship-title,
+    .hl {
+      display: inline;
+      padding: 0 1mm;
+    }
+
+    .ship-section {
+      margin-top: 26mm;
+    }
+
+    .quotation-box {
+      border: 1.4px solid #000;
+      padding: 4mm 4mm 4.5mm 4mm;
+      min-height: 87mm;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .quotation-box-title {
+      font-size: 27px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 5mm;
+    }
+
+    .quotation-box table td {
+      padding: 0.7mm 1mm 0.7mm 0;
+      vertical-align: top;
+    }
+
+    .quotation-box .q-label {
+      font-size: 11px;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .quotation-box .q-value {
+      font-size: 15px;
+      line-height: 1.15;
+    }
+
+    .quotation-box .q-value.small-value {
+      font-size: 13px;
+    }
+
+    .quotation-box .q-hi {
+      font-weight: 700;
+      padding: 0 1mm;
+      display: inline-block;
+    }
+
+    .quotation-box a {
+      color: #0000ee;
+      text-decoration: underline;
+    }
+
+    .terms-table.box-layout-terms {
+      margin-top: 0;
+      font-size: 15px;
+    }
+
+    .terms-table.box-layout-terms td {
+      padding: 0.7mm 1.5mm 0.7mm 0;
+      line-height: 1.25;
+    }
+
+    .terms-table.box-layout-terms .terms-label {
+      width: 24%;
+      font-size: 13px;
+    }
+
+    .terms-table.box-layout-terms .terms-value {
+      width: 76%;
+      white-space: pre-line;
+    }
+
+    .terms-table.box-layout-terms .yellow-label {
+      font-weight: 400;
+      padding: 0 0.8mm;
+      display: inline-block;
+    }
+
+    .salutation.box-layout-salutation {
+      margin-top: 9mm;
+      font-size: 15px;
+    }
+
+    .opening-text {
+      font-size: 15px;
+      line-height: 1.3;
+      margin-bottom: 3mm;
+    }
+
+    .terms-table td {
+      padding: 0.6mm 1.5mm 0.6mm 0;
+      line-height: 1.18;
+    }
+
+    .terms-label {
+      width: 24%;
+      font-weight: 700;
+    }
+
+    .terms-value {
+      width: 76%;
+    }
+
+    .salutation {
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+    }
+
+
+    .project-item-table {
+      margin-top: 3mm;
+      font-size: 10.2px;
+      border-collapse: collapse;
+    }
+
+    .project-item-table th {
+      padding: 1.3mm 1.8mm;
+      line-height: 1.18;
+      border-left: 1px dotted #c7c7c7;
+      border-right: 1px dotted #c7c7c7;
+      text-align: left;
+    }
+
+    .project-item-table td {
+      padding: 2.5mm 1.8mm;
+      line-height: 1.18;
+      border-left: 1px dotted #c7c7c7;
+      border-right: 1px dotted #c7c7c7;
+      border-bottom: 1px dotted #c7c7c7;
+    }
+
+    .project-item-table thead th {
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+      font-weight: 700;
+    }
+
+    .project-item-table .pos {
+      width: 7%;
+    }
+
+    .project-item-table .scope {
+      width: 45%;
+    }
+
+    .project-item-table .qty {
+      width: 8%;
+      text-align: center;
+    }
+
+    .project-item-table .unit {
+      width: 10%;
+      text-align: center;
+    }
+
+    .project-item-table .price {
+      width: 15%;
+      text-align: right;
+    }
+
+    .project-item-table .net {
+      width: 15%;
+      text-align: right;
+    }
+
+    .item-table {
+      margin-top: 3mm;
+      font-size: 10.2px;
+    }
+
+    .item-table th,
+    .item-table td {
+      padding: 1mm 1.2mm 1mm 0;
+      line-height: 1.18;
+    }
+
+    .item-table thead th {
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      font-weight: 700;
+    }
+
+    .item-table .pos {
+      width: 7%;
+    }
+
+    .item-table .qty {
+      width: 12%;
+    }
+
+    .item-table .mat {
+      width: 18%;
+    }
+
+    .item-table .desc {
+      width: 38%;
+    }
+
+    .item-table .price {
+      width: 13%;
+      text-align: right;
+    }
+
+    .item-table .net {
+      width: 12%;
+      text-align: right;
+    }
+
+    .desc-block {
+      white-space: pre-line;
+      line-height: 1.22;
+    }
+
+    .section-divider td {
+      border-top: 1px solid #000;
+      padding-top: 2mm;
+    }
+
+    .spacer-row td {
+      height: 5mm;
+    }
+
+    .spacer-row-small td {
+      height: 3mm;
+    }
+
+    .total-table {
+      margin-top: 5mm;
+      font-size: 10.7px;
+    }
+
+    .total-table td {
+      padding: 0.8mm 0;
+    }
+
+    .total-label {
+      width: 73%;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .total-currency {
+      width: 12%;
+      text-align: right;
+      font-weight: 700;
+      padding-right: 4mm !important;
+    }
+
+    .total-value {
+      width: 15%;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .price-note {
+      margin-top: 12mm;
+      font-size: 9.7px;
+    }
+
+    .conditions-title {
+      margin-top: 9mm;
+      margin-bottom: 5mm;
+      font-weight: 700;
+    }
+
+    .condition {
+      margin-bottom: 3.5mm;
+      page-break-inside: avoid;
+    }
+
+    .condition-table td {
+      line-height: 1.24;
+    }
+
+    .condition-no {
+      width: 8mm;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .condition-body {
+      width: auto;
+    }
+
+    .condition-head {
+      font-weight: 700;
+      margin-bottom: 1.2mm;
+    }
+
+    .payment-lines {
+      margin-left: 11mm;
+      white-space: normal;
+    }
+
+    .payment-lines div {
+      margin: 0;
+      padding: 0;
+      line-height: 1.25;
+    }
+
+
+    .footer-sign {
+      margin-top: 8mm;
+      page-break-inside: avoid;
+    }
+
+    .row-left-upset {
+      position: relative;
+      left: 80px;
+    }
+
+    .signature-img {
+      display: block;
+      width: 36mm;
+      height: 16mm;
+      object-fit: contain;
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+    }
+
+    .company-name-spaced {
+      font-weight: 700;
+      letter-spacing: 3.1px;
+      margin-bottom: 3mm;
+    }
+
+    .footer-company {
+      font-size: 9.5px;
+      line-height: 1.2;
+    }
+
+    .footer-company td:first-child {
+      width: 17mm;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    .row-left-upset {
+      position: relative;
+      left: 0px;
+    }
+
+    .footer-company {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .footer-company-name {
+      font-weight: bold;
+      font-size: medium;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+    .footer-logo-cell {
+      vertical-align: top;
+    }
+
+    .footer-logo {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media screen {
+      body {
+        background: #e9e9e9;
+        padding: 12px 0;
+      }
+
+      .page {
+        padding: 14mm 13mm 13mm 13mm;
+        width: 210mm;
+        min-height: 297mm;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.18);
+      }
+    }
+
+    @media print {
+      .page {
+        width: auto;
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="print-page">
+      <table class="header-table">
+        <tr>
+          <td class="header-left">
+            <div class="bold">PROJECT QUOTATION NO./DATE</div>
+            <div>{{quotationNumber}} / {{quotationDateFormatted}}</div>
+            <div>{{location}} / {{projectNo}}</div>
+            <br />
+            <div class="bold">{{projectTitle}}</div>
+          </td>
+          <td class="header-right">
+            <img class="header-logo" src="{{logoBase64}}" alt="Company Logo" />
+            <div>PT Loesche Indonesia, Wisma Metropolitan 1, WTC 5. 7th floor, Jl Jend Sudirman Kav.29 Jakarta 12920
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="rule"></div>
+
+      <div class="customer-quotation-wrap">
+        <div class="customer-block">
+          <div><span class="customer-name">{{customerName}}</span></div>
+          <div class="preline">{{customerAddress}}</div>
+
+          <div class="ship-section">
+            <div><span class="ship-title bold">PROJECT SITE:</span></div>
+            <br />
+            <div><span class="hl">{{projectSiteName}}</span></div>
+            <div class="preline">{{projectSiteAddress}}</div>
+          </div>
+        </div>
+
+        <div class="quotation-box">
+          <div class="quotation-box-title">QUOTATION</div>
+          <table>
+            <tr>
+              <td class="q-label" style="width:58%;">Quotation no./location/project-no.</td>
+              <td class="q-label" style="width:42%;">Date</td>
+            </tr>
+            <tr>
+              <td class="q-value"><span class="q-hi">{{quotationNumber}} {{location}} / {{projectNo}}</span></td>
+              <td class="q-value"><span class="q-hi">{{quotationDateFormatted}}</span></td>
+            </tr>
+            <tr>
+              <td class="q-label">Project Responsible</td>
+              <td class="q-label">Tel no.</td>
+            </tr>
+            <tr>
+              <td class="q-value ">{{picName}}</td>
+              <td class="q-value row-left-upset">{{picPhone}}</td>
+            </tr>
+            <tr>
+              <td class="q-label">Our Fax-no.</td>
+              <td class="q-label row-left-upset">Mail</td>
+            </tr>
+            <tr>
+              <td class="q-value">{{faxNo}}</td>
+              <td class="q-value small-value row-left-upset"><a href="mailto:{{picEmail}}">{{picEmail}}</a></td>
+            </tr>
+            <tr>
+              <td class="q-label">Your client no.</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="height:7mm;"></td>
+            </tr>
+            <tr>
+              <td class="q-label">Inquiry no./Date</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="q-value" colspan="2"><span class="q-hi">{{inquiryNumber}} / {{inquiryDateFormatted}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="q-label">Validity period</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="q-value" colspan="2"><span class="q-hi">Until&nbsp;&nbsp;{{validityDateFormattedShort}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="q-label">Attention:</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="q-value" colspan="2">{{attentionTitle}}<span class="q-hi">{{attention}}</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <table class="terms-table box-layout-terms">
+        <tr>
+          <td class="terms-label"><span class="yellow-label">Project Duration:</span></td>
+          <td class="terms-value">{{projectDuration}}</td>
+        </tr>
+        <tr>
+          <td class="terms-label"><span class="yellow-label">Project Location:</span></td>
+          <td class="terms-value">{{projectLocation}}</td>
+        </tr>
+        <tr>
+          <td class="terms-label"><span class="yellow-label">Payment:</span></td>
+          <td class="terms-value">{{paymentTerms}}</td>
+        </tr>
+      </table>
+
+      <div class="salutation box-layout-salutation">Dear sirs,</div>
+      <div class="opening-text">With reference to your above mentioned inquiry, PT Loesche Indonesia is pleased
+        to submit our project quotation for {{projectTitle}} as follows:
+      </div>
+      <table class="project-item-table">
+        <thead>
+          <tr>
+            <th class="pos">Pos.</th>
+            <th class="scope">Description / Scope of Work</th>
+            <th class="qty">Qty</th>
+            <th class="unit">Unit</th>
+            <th class="price">Unit Price<br />{{currency}}</th>
+            <th class="net">Total Price<br />{{currency}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each projectItems}}
+          <tr>
+            <td>{{this.pos}}</td>
+            <td class="desc-block"><strong>{{this.title}}</strong><br />{{this.description}}
+              <div style="font-style: italic; color: #444; margin-top: 1mm; white-space: pre-line;">{{this.note}}</div></td>
+            <td class="center">{{this.qty}}</td>
+            <td class="center">{{this.unit}}</td>
+            <td class="price">{{this.unitPriceStr}}</td>
+            <td class="net">{{this.totalPriceStr}}</td>
+          </tr>
+          <tr class="spacer-row-small">
+            <td colspan="6"></td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <table class="total-table">
+        <tr>
+          <td class="total-label">Total Project Price</td>
+          <td class="total-currency">{{currency}}</td>
+          <td class="total-value">{{totalPriceStr}}</td>
+        </tr>
+      </table>
+
+      <div class="price-note">*Price does not include VAT and is subject to change in case of scope changes, additional
+        work, or project variation order</div>
+
+      <div class="footer-sign">
+        <img class="signature-img" src="{{signatureImageUrl}}" alt="Signature" />
+
+        <table class="footer-company">
+          <tr>
+            <td rowspan="7" class="footer-company-name">
+              PT Loesche Indonesia
+            </td>
+            <td rowspan="2" class="footer-logo-cell">
+              <img class="footer-logo" src="{{footerBase64}}" alt="Company Logo" />
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
